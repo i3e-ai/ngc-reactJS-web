@@ -3,6 +3,8 @@
 import { useEffect, useState, useRef } from "react"
 import Image from 'next/image'
 import './header.css';
+import Navigation from '../navigation/navigation';
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null); // Added proper typing
@@ -90,16 +92,9 @@ export default function Header() {
             </div>
             <Image src="/vercel.svg" alt="logo" width={100} height={24} />
           </div>
-          <nav className={`nav-sections ${isOpen ? 'is-open' : ''}`}>
-            <ul className="nav-menu">
-              <li><a href="#">Products</a></li>
-              <li><a href="#">Article</a></li>
-              <li><a href="#">Blogs</a></li>
-              <li><a href="#">Press Release</a></li>
-            </ul>
-          </nav>
+          <Navigation isOpen={isOpen} />
         </div>
       </div>
     </div>
-  )
-};
+  );
+}
