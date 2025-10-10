@@ -1,5 +1,6 @@
 import Header from "./blocks/header/header";
 import HeroCarousel from "./blocks/hero-carousel/hero-carousel";
+import ProductDisplay from "./blocks/product-display/product-display";
 
 export default function RootLayout({
   children,
@@ -12,6 +13,7 @@ export default function RootLayout({
         <Header />
         {children}
         <HeroCarousel />
+        <ProductDisplay />
       </body>
     </html>
   );
