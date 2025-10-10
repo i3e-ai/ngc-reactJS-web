@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import Image from 'next/image';
 import './navigation.css';
 
@@ -78,7 +77,7 @@ const navigationData: Record<string, DropdownContent> = {
   }
 };
 
-const Navigation: FC<NavigationProps> = ({ isOpen }) => {
+export default function Navigation({ isOpen }: NavigationProps) {
   return (
     <nav className={`nav-sections ${isOpen ? 'is-open' : ''}`}>
       <ul className="nav-menu">
@@ -117,6 +116,4 @@ const Navigation: FC<NavigationProps> = ({ isOpen }) => {
       </ul>
     </nav>
   );
-};
-
-export default Navigation;
+}
