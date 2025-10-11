@@ -1,0 +1,124 @@
+// --- Variables for easy customization ---
+@card-width: 320px;
+@card-gap: 24px;
+@border-radius: 12px;
+@bg-color: #ffffff;
+@card-bg: #f5f5f7;
+@text-color: #1d1d1f;
+
+// --- Main Block ---
+.content-curator-block {
+  padding: 4rem 0;
+  background-color: @bg-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+// --- Container ---
+.curator-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+// --- Header ---
+.curator-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+
+  .curator-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: @text-color;
+  }
+}
+
+// --- Gallery Wrapper ---
+.curator-gallery-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+// --- Gallery Grid ---
+.curator-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: @card-gap;
+}
+
+// --- Individual Card ---
+.gallery-item {
+  width: @card-width;
+  background-color: @card-bg;
+  border-radius: @border-radius;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .item-media {
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+  }
+
+  .item-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .item-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6e6e73;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .item-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: @text-color;
+    margin-bottom: 1rem;
+  }
+
+  .item-link {
+    font-size: 1rem;
+    color: #0070f3;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// --- Responsive Tweaks ---
+@media (max-width: 1024px) {
+  @card-width: 280px;
+}
+
+@media (max-width: 768px) {
+  @card-width: 240px;
+}
+
+@media (max-width: 480px) {
+  @card-width: 100%;
+}
+  

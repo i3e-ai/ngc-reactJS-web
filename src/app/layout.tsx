@@ -1,3 +1,4 @@
+import ContentCurator from "./blocks/content-curator/content-curator";
 import Header from "./blocks/header/header";
 import HeroCarousel from "./blocks/hero-carousel/hero-carousel";
 import ProductDisplay from "./blocks/product-display/product-display";
@@ -14,6 +15,7 @@ export default function RootLayout({
         {children}
         <HeroCarousel />
         <ProductDisplay />
+        <ContentCurator />
       </body>
     </html>
   );
