@@ -1,9 +1,8 @@
-"use client"; // Required for components with user interaction like hover effects
+"use client";
 
 import Image from 'next/image';
-import './content-curator.css'; // Make sure you're importing the CSS file
+import './content-curator.css';
 
-// (The GalleryItem interface remains the same)
 interface GalleryItem {
   eyebrow: string;
   title: string;
@@ -21,7 +20,7 @@ const curatorData: GalleryItem[] = [
   {
     eyebrow: 'Entertainment',
     title: 'All your entertainment in one place.',
-    link: { href: '#', text: 'Explore Apple TV+' },
+    link: { href: '#', text: 'Explore' },
     image: { src: '/assets/content-curator/entertainment.jpg', alt: 'A montage of movie and TV show posters' },
   },
   {
@@ -39,8 +38,8 @@ const curatorData: GalleryItem[] = [
 ];
 
 const ContentCurator: React.FC = () => {
-  // We combine the data with itself to create the seamless loop effect
-  const duplicatedData = [...curatorData, ...curatorData];
+  // Triple the data for seamless infinite loop
+  const duplicatedData = [...curatorData, ...curatorData, ...curatorData];
 
   return (
     <div className="content-curator-block">
@@ -48,7 +47,6 @@ const ContentCurator: React.FC = () => {
         <div className="curator-header">
           <h2 className="curator-title">Discover what you can do</h2>
         </div>
-        {/* This wrapper is our "viewport" for the animation */}
         <div className="curator-gallery-wrapper">
           <div className="curator-gallery">
             {duplicatedData.map((item, index) => (

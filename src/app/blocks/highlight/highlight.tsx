@@ -1,5 +1,5 @@
 import React from 'react';
-import './highligh.css';
+import './highlight.css';
 
 interface Slide {
   title: string;

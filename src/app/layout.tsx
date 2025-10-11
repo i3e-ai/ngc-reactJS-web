@@ -5,19 +5,18 @@ import Highlight from "./blocks/highlight/highlight";
 import ProductDisplay from "./blocks/product-display/product-display";
 
 export default function RootLayout({
-  children,
+
 }: {
   children: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <body>
+        <Highlight />
         <Header />
-        {children}
         <HeroCarousel />
         <ProductDisplay />
         <ContentCurator />
-        <Highlight />
       </body>
     </html>
   );

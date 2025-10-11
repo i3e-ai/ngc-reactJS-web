@@ -29,8 +29,8 @@ const slides: CarouselItem[] = [
   },
   {
     image: '/assets/carousel/slide3.jpg',
-    title: 'Secure by Design',
-    subtitle: 'Your Safety is Our Priority',
+    title: 'Edge Delivery Services',
+    subtitle: 'Ready for your content',
     buttonText: 'See Details',
     buttonLink: '/security'
   }

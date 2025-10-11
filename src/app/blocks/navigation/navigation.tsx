@@ -19,26 +19,29 @@ interface NavigationProps {
 const navigationData: Record<string, DropdownContent> = {
   'Products': {
     links: [
-      { text: 'Software Solutions', href: '/products/software' },
-      { text: 'Hardware Products', href: '/products/hardware' },
-      { text: 'Services', href: '/products/services' }
+      { text: 'Phone', href: '/products' },
+      { text: 'Laptop', href: '/products' },
+      { text: 'Headphone', href: '/products' },
+      { text: 'Tablet', href: '/products' }
+      
     ],
     featured: {
-      image: '/featured-product.jpg',
+      image: '/assets/dropdown-content/products.jpg',
       title: 'New Product Launch',
-      subtitle: 'Discover our latest innovation',
+      subtitle: 'Explore our Products',
       buttonText: 'Learn More',
       buttonLink: '/new-product'
     }
   },
   'Article': {
     links: [
-      { text: 'Technology', href: '/articles/tech' },
-      { text: 'Business', href: '/articles/business' },
-      { text: 'Innovation', href: '/articles/innovation' }
+      { text: 'Home', href: '/articles' },
+      { text: 'Work', href: '/articles' },
+      { text: 'Fitness', href: '/articles' },
+      { text: 'Innovation', href: '/articles' }
     ],
     featured: {
-      image: '/featured-article.jpg',
+      image: '/assets/dropdown-content/article.png',
       title: 'Latest Articles',
       subtitle: 'Stay updated with industry trends',
       buttonText: 'Read More',
@@ -47,13 +50,13 @@ const navigationData: Record<string, DropdownContent> = {
   },
   'Blogs': {
     links: [
-      { text: 'Tech Blogs', href: '/blogs/tech' },
-      { text: 'Business Blogs', href: '/blogs/business' },
-      { text: 'Tutorial Blogs', href: '/blogs/tutorials' },
-      { text: 'Case Studies', href: '/blogs/case-studies' }
+      { text: 'Travel', href: '/blogs' },
+      { text: 'Music', href: '/blogs' },
+      { text: 'Sports', href: '/blogs' },
+      { text: 'News', href: '/blogs' }
     ],
     featured: {
-      image: '/featured-blog.jpg',
+      image: '/assets/dropdown-content/blogs.png',
       title: 'Featured Blog',
       subtitle: 'Expert insights and analysis',
       buttonText: 'Start Reading',
@@ -62,13 +65,12 @@ const navigationData: Record<string, DropdownContent> = {
   },
   'Press Release': {
     links: [
-      { text: 'Company News', href: '/press/news' },
-      { text: 'Media Coverage', href: '/press/media' },
-      { text: 'Events', href: '/press/events' },
-      { text: 'Awards', href: '/press/awards' }
+      { text: 'General', href: '/press' },
+      { text: 'Products', href: '/press' },
+      { text: 'Financial Results', href: '/press' }
     ],
     featured: {
-      image: '/featured-press.jpg',
+      image: '/assets/dropdown-content/press-release.png',
       title: 'Latest Press Release',
       subtitle: 'Stay informed about our latest developments',
       buttonText: 'View All News',

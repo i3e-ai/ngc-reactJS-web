@@ -87,11 +87,13 @@ export default function Header() {
             <button className="hamburger-button"><b>☰</b></button>
           </div>
           <div className="title-block">
+            <Image src="/assets/logo.png" alt="logo" width={64} height={56} />
             <div className="title">
-              <h1><b>EDS App</b></h1>
+              <h1>EDS App</h1>
             </div>
-            <Image src="/vercel.svg" alt="logo" width={100} height={24} />
           </div>
+        </div>
+        <div className="naviagation-content">
           <Navigation isOpen={isOpen} />
         </div>
       </div>

@@ -205,22 +205,10 @@ main img {
     transform: translateX(-50%);
   }
 }
-.highlight.block {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-  background-color: rgba(185, 185, 185, 0.784);
-  color: #000000;
-  overflow: hidden;
-  height: 20px;
-  display: flex;
-  align-items: center;
-}
 .highlight-slides-container,
 .scrolling-wrapper {
   height: 100%;
+  background-color: lightgrey;
 }
 .scrolling-wrapper {
   display: flex;
