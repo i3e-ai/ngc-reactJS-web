@@ -195,6 +195,12 @@ main img {
   margin: 0 auto;
   width: 100%;
 }
+body.scroll-lock {
+  overflow: hidden;
+}
+html {
+  overflow-y: scroll;
+}
 .nav-sections .nav-menu {
   display: flex;
   justify-content: flex-start;
@@ -374,4 +380,9 @@ main img {
   .nav-sections .nav-menu > li.has-dropdown.dropdown-open .dropdown-content a:focus {
     color: #4a4a4a;
   }
+}
+.has-dropdown.no-dropdown:hover .dropdown-content {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none;
 }

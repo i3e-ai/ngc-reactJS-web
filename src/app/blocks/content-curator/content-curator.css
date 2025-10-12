@@ -196,6 +196,9 @@ main img {
 body.scroll-lock {
   overflow: hidden;
 }
+html {
+  overflow-y: scroll;
+}
 @keyframes slide-carousel {
   from {
     transform: translateX(0%);

@@ -25,7 +25,7 @@ const ArticleData: StructuredArticleItem[] = [
   {
     title: 'The Future of AI in Everyday Life',
     image: {
-      src: '/assets/content-curator/entertainment.jpg',
+      src: '/assets/article/fututre-of-ai.png',
       alt: 'A montage of movie and TV show posters'
     },
     body: {

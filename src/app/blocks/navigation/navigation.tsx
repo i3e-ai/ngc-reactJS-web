@@ -7,7 +7,7 @@ import './navigation.css';
 // Your updated data structure
 interface DropdownContent {
   mainHref: string;
-  links: { text: string; href: string }[];
+  links?: { text: string; href: string }[];
   featured?: {
     image: string;
     title: string;
@@ -18,6 +18,9 @@ interface DropdownContent {
 }
 
 const navigationData: Record<string, DropdownContent> = {
+  'Home': {
+    mainHref: '/#',
+  },
   'Products': {
     mainHref: '/products',
     links: [
@@ -74,7 +77,7 @@ const navigationData: Record<string, DropdownContent> = {
       { text: 'Financial Results', href: '/press-release' }
     ],
     featured: {
-      image: '/assets/dropdown-content/press-release.png',
+      image: '/assets/dropdown-content/press-release.jpg',
       title: 'Latest Press Release',
       subtitle: 'Stay informed about our latest developments',
       buttonText: 'View All News',
@@ -89,13 +92,13 @@ export default function Navigation({ isOpen }: { isOpen: boolean }) {
     <nav className={`nav-sections ${isOpen ? 'is-open' : ''}`}>
       <ul className="nav-menu">
         {Object.entries(navigationData).map(([key, content]) => (
-          <li key={key} className="has-dropdown">
+          <li key={key} className={`has-dropdown ${!content.links ? 'no-dropdown' : ''}`}>
             {/* 2. Replace top-level <a> with <Link> */}
             <Link href={content.mainHref}>{key}</Link>
             <div className="dropdown-content">
               <div className="dropdown-container">
                 <div className="dropdown-nav">
-                  {content.links.map((link, index) => (
+                  {content.links?.map((link, index) => (
                     // 3. Replace dropdown <a> with <Link>
                     <Link key={index} href={link.href}>{link.text}</Link>
                   ))}

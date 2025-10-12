@@ -24,6 +24,7 @@ export default function ScrollLockHandler() {
         menu.removeEventListener("mouseenter", lockScroll);
         menu.removeEventListener("mouseleave", unlockScroll);
       });
+      document.body.classList.remove("scroll-lock");
     };
   }, []);
 

@@ -5,18 +5,21 @@ import BlogHero from './blog-hero/blog-hero'
 import BlogContent from './blog-content/blog-content';
 
 const heroData = {
-  imageUrl: '/images/blog-hero-background.jpg', // URL from your /public folder
+  imageUrl: 'assets/blog/future-of-ai.jpg', // URL from your /public folder
   contentHTML: `
-    <h1>The Art of Modern Web Development</h1>
-    <p>By Jane Doe | Published on October 12, 2025</p>
+    <h1>The Future of AI in  2025</h1>
+    <p>A deep dive into the trends shaping our world.</p>
   `,
 };
 
 const articleBodyHTML = `
-  <p>Modern web development is a constantly evolving landscape. What was best practice just a few years ago might be considered legacy today.</p>
-  <h2>Key Principles to Follow</h2>
+  <h2>The Future of AI in 2025</h2>
+  <br>
+  <p>Artificial Intelligence (AI) continues to evolve at a breathtaking pace. As we look towards 2025, several key trends are set to redefine industries and our daily lives. From generative AI becoming a standard business tool to advancements in autonomous systems, the landscape is shifting rapidly.
+This article explores the most significant developments we can expect.
+</p>
   <ul>
-    <li><strong>Component-Based Architecture:</strong> Breaking UIs into reusable components allows for more maintainable and scalable codebases.</li>
+    <li><strong>Generative AI in the Enterprise:</strong> Beyond creative pursuits, generative AI is becoming integral to software development, marketing, and data analysis, automating complex tasks and boosting productivity</li>
     <li><strong>Performance First:</strong> Optimizing for speed is no longer an afterthought.</li>
     <li><strong>Accessibility (a11y):</strong> Building inclusive websites is a fundamental responsibility.</li>
   </ul>
