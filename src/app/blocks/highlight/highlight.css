@@ -78,9 +78,6 @@ html {
   scroll-behavior: smooth;
   padding: 0;
 }
-main {
-  padding-top: 40px;
-}
 body {
   font-family: "Sora", sans-serif;
   font-size: 1rem;
@@ -189,7 +186,6 @@ main img {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 1rem;
   background: #fafafa;
 }
 .main-content {
@@ -207,8 +203,10 @@ main img {
 }
 .highlight-slides-container,
 .scrolling-wrapper {
+  box-sizing: border-box;
   height: 100%;
   background-color: lightgrey;
+  overflow: hidden;
 }
 .scrolling-wrapper {
   display: flex;

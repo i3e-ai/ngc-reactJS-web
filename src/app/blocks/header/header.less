@@ -14,10 +14,6 @@
 
 // parent blocks consist of all the elements
 .header.block {
-  > div:first-child {
-    position: relative;
-  }
-
   .header-content {
     display: flex;
     flex-direction: column;
@@ -66,7 +62,7 @@
       padding: @space-4;
 
       &.is-open {
-        display: block;
+        display: flex;
       }
     }
 
@@ -78,10 +74,14 @@
       gap: @space-4;
 
       @media (max-width: 768px) {
+        .header-content {
+          flex-direction: row;
+          padding: 0 1rem; 
+        }
         flex-direction: column;
       }
 
-      li {
+      .has-dropdown {
         a {
           color: black;
           text-decoration: none;
@@ -111,7 +111,7 @@
     .nav-menu {
       display: flex !important;
 
-      li {
+      .has-dropdown {
         border: none;
 
         a {
