@@ -194,6 +194,9 @@ main img {
   margin: 0 auto;
   width: 100%;
 }
+body.scroll-lock {
+  overflow: hidden;
+}
 main .section.productdisplay-container {
   max-width: 1250px;
   margin: 0 auto;

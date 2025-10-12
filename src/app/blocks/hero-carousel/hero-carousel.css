@@ -195,6 +195,9 @@ main img {
   margin: 0 auto;
   width: 100%;
 }
+body.scroll-lock {
+  overflow: hidden;
+}
 .hero-carousel-container {
   position: relative;
   overflow: hidden;

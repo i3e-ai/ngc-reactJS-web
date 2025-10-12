@@ -219,7 +219,7 @@ main img {
 }
 .nav-sections .nav-menu > li.has-dropdown .dropdown-content {
   position: fixed !important;
-  inset: 170px 0 0;
+  inset: 140px 0 0;
   background: #ffffff;
   z-index: 999;
   display: none !important;
