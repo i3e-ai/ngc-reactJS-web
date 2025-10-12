@@ -1,7 +1,12 @@
 import Image from 'next/image';
+import Link from 'next/link'; // 1. Import the Link component
 import './navigation.css';
 
+// The updated interfaces and data from Step 1 go here...
+
+// Your updated data structure
 interface DropdownContent {
+  mainHref: string;
   links: { text: string; href: string }[];
   featured?: {
     image: string;
@@ -12,18 +17,14 @@ interface DropdownContent {
   };
 }
 
-interface NavigationProps {
-  isOpen: boolean;
-}
-
 const navigationData: Record<string, DropdownContent> = {
   'Products': {
+    mainHref: '/products',
     links: [
       { text: 'Phone', href: '/products' },
       { text: 'Laptop', href: '/products' },
       { text: 'Headphone', href: '/products' },
       { text: 'Tablet', href: '/products' }
-      
     ],
     featured: {
       image: '/assets/dropdown-content/products.jpg',
@@ -34,36 +35,39 @@ const navigationData: Record<string, DropdownContent> = {
     }
   },
   'Article': {
+    mainHref: '/article',
     links: [
-      { text: 'Home', href: '/articles' },
-      { text: 'Work', href: '/articles' },
-      { text: 'Fitness', href: '/articles' },
-      { text: 'Innovation', href: '/articles' }
+      { text: 'Home', href: '/article' },
+      { text: 'Work', href: '/article' },
+      { text: 'Fitness', href: '/article' },
+      { text: 'Innovation', href: '/article' }
     ],
     featured: {
       image: '/assets/dropdown-content/article.png',
       title: 'Latest Articles',
       subtitle: 'Stay updated with industry trends',
       buttonText: 'Read More',
-      buttonLink: '/articles'
+      buttonLink: '/article'
     }
   },
   'Blogs': {
+    mainHref: '/blog',
     links: [
-      { text: 'Travel', href: '/blogs' },
-      { text: 'Music', href: '/blogs' },
-      { text: 'Sports', href: '/blogs' },
-      { text: 'News', href: '/blogs' }
+      { text: 'Travel', href: '/blog' },
+      { text: 'Music', href: '/blog' },
+      { text: 'Sports', href: '/blog' },
+      { text: 'News', href: '/blog' }
     ],
     featured: {
       image: '/assets/dropdown-content/blogs.png',
       title: 'Featured Blog',
       subtitle: 'Expert insights and analysis',
       buttonText: 'Start Reading',
-      buttonLink: '/blogs/featured'
+      buttonLink: '/blog'
     }
   },
   'Press Release': {
+    mainHref: '/press',
     links: [
       { text: 'General', href: '/press' },
       { text: 'Products', href: '/press' },
@@ -79,18 +83,21 @@ const navigationData: Record<string, DropdownContent> = {
   }
 };
 
-export default function Navigation({ isOpen }: NavigationProps) {
+
+export default function Navigation({ isOpen }: { isOpen: boolean }) {
   return (
     <nav className={`nav-sections ${isOpen ? 'is-open' : ''}`}>
       <ul className="nav-menu">
         {Object.entries(navigationData).map(([key, content]) => (
           <li key={key} className="has-dropdown">
-            <a href="#">{key}</a>
+            {/* 2. Replace top-level <a> with <Link> */}
+            <Link href={content.mainHref}>{key}</Link>
             <div className="dropdown-content">
               <div className="dropdown-container">
                 <div className="dropdown-nav">
                   {content.links.map((link, index) => (
-                    <a key={index} href={link.href}>{link.text}</a>
+                    // 3. Replace dropdown <a> with <Link>
+                    <Link key={index} href={link.href}>{link.text}</Link>
                   ))}
                 </div>
                 {content.featured && (
@@ -105,9 +112,10 @@ export default function Navigation({ isOpen }: NavigationProps) {
                     <div className="image-overlay">
                       <h2 className="overlay-title">{content.featured.title}</h2>
                       <p className="overlay-subtitle">{content.featured.subtitle}</p>
-                      <a href={content.featured.buttonLink} className="overlay-button">
+                      {/* 4. Replace button <a> with <Link> */}
+                      <Link href={content.featured.buttonLink} className="overlay-button">
                         {content.featured.buttonText}
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )}
