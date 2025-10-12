@@ -67,18 +67,18 @@ const navigationData: Record<string, DropdownContent> = {
     }
   },
   'Press Release': {
-    mainHref: '/press',
+    mainHref: '/press-release',
     links: [
-      { text: 'General', href: '/press' },
-      { text: 'Products', href: '/press' },
-      { text: 'Financial Results', href: '/press' }
+      { text: 'General', href: '/press-release' },
+      { text: 'Products', href: '/press-release' },
+      { text: 'Financial Results', href: '/press-release' }
     ],
     featured: {
       image: '/assets/dropdown-content/press-release.png',
       title: 'Latest Press Release',
       subtitle: 'Stay informed about our latest developments',
       buttonText: 'View All News',
-      buttonLink: '/press/all'
+      buttonLink: '/press-release'
     }
   }
 };
