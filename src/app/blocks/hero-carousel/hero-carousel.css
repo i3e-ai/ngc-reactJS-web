@@ -307,13 +307,6 @@ html {
   transition: all 0.3s ease;
   z-index: 10;
 }
-.hero-carousel-container .carousel-nav:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-50%) scale(1.1);
-}
-.hero-carousel-container .carousel-nav:active {
-  transform: translateY(-50%) scale(0.95);
-}
 .hero-carousel-container .carousel-nav.prev {
   left: 2rem;
 }
@@ -364,13 +357,6 @@ html {
   justify-content: center;
   transition: all 0.3s ease;
   z-index: 10;
-}
-.hero-carousel-container .carousel-play-pause:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-.hero-carousel-container .carousel-play-pause:active {
-  transform: scale(0.95);
 }
 .hero-carousel-container .hero-carousel-empty {
   display: flex;

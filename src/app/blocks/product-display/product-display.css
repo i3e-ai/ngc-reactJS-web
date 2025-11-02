@@ -223,14 +223,14 @@ main .section.productdisplay-container {
   flex-direction: column;
   background-color: #f5f5f5;
   border: none;
-  border-radius: 12px;
+  border-radius: 4px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
   overflow: hidden;
   font-family: "Geist", sans-serif;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .productdisplay.block > div:hover {
-  transform: translateY(-5px);
+  transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
 }
 .productdisplay.block > div .product-image-wrapper img {

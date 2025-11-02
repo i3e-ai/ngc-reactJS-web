@@ -15,7 +15,6 @@
 @carousel-item-width: 400px;
 @carousel-duration: 30s;
 @carousel-image-height: 250px;
-@carousel-border-radius: 12px;
 
 .content-curator-block {
   padding: 4rem 2rem;
@@ -62,10 +61,10 @@
     transition: transform 0.3s ease;
 
     &:hover {
-      transform: translateY(-8px);
+      transform: translateY(-1px);
 
       .item-media img {
-        transform: scale(1.05);
+        transform: scale(1.01);
       }
     }
   }
@@ -74,7 +73,7 @@
     width: 100%;
     height: @carousel-image-height;
     overflow: hidden;
-    border-radius: @carousel-border-radius;
+    border-radius: @card-br;
 
     img {
       width: 100%;
@@ -115,6 +114,34 @@
     &:hover {
       color: #0052a3;
       text-decoration: underline;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .content-curator-block {
+    padding: 2rem 1rem;
+
+    .curator-title {
+      font-size: 1.8rem;
+    }
+
+    .curator-gallery {
+      gap: 1rem;
+      animation-duration: 15s;
+    }
+
+    .gallery-item {
+      flex: 0 0 85%;
+      max-width: 300px; // ✅ Keeps cards readable and centered
+      margin: 0 auto;
+    }
+
+    .item-media {
+      height: 200px;
+    }
+
+    .item-title {
+      font-size: 1.2rem;
     }
   }
 }

@@ -225,7 +225,7 @@ html {
   display: inline-block;
   transition: all 0.3s;
   border-radius: 2px;
-  border: 1px solid black;
+  border: 2px solid black;
 }
 .press-release-button:hover {
   cursor: pointer;
