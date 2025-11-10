@@ -1,0 +1,66 @@
+@import url("../../styles/styles.less");
+
+.footer-block {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 60px; // Reduced height
+  padding: 0.5rem 20rem; // Reduced vertical padding
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem; // Reduced margin
+
+    .footer-section {
+      h3 {
+        font-size: @text-xl;
+        margin-bottom: 1rem;
+        color: @text-primary;
+      }
+
+      p {
+        font-size: @text-base;
+        color: @text-secondary;
+        margin-bottom: 0.5rem;
+      }
+    }
+    .nav-section {
+      h3 {
+        font-size: @text-xl;
+        margin-bottom: 1rem;
+        color: @text-primary;
+      }
+      nav {
+        display: flex;
+        flex-direction: column;
+        margin-top: 0;
+        align-items: center;
+        gap: 0.6rem;
+        a {
+          color: @text-secondary;
+          text-decoration: none;
+          font-size: @text-base;
+          transition: color 0.2s ease;
+          &:hover {
+            color: darken(@text-secondary, 10%);
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+  .footer-bottom {
+    text-align: center;
+    padding-top: 0.25rem; // Reduced padding
+    border-top: 1px solid @border-color;
+
+    p {
+      font-size: @text-sm;
+      color: @text-secondary;
+      margin: 0;
+    }
+  }
+}
