@@ -1,4 +1,4 @@
-@import (reference) "../../styles/styles.less";
+@import (reference) '../../styles/styles.less';
 
 // 1. BASE HEADER STYLES (Applies to all screen sizes)
 
@@ -32,17 +32,19 @@
   }
 
   .nav-hamburger {
-    display: none; // Hidden by default
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: black;
     position: absolute;
-    left: 1rem;
+    left: @space-2;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 24px;
-    z-index: 1000;
+
+    // hamburger button
+    button {
+      padding: 8px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size:larger;
+    }
   }
 }
 
@@ -69,7 +71,6 @@
     }
   }
 }
-
 
 // 3. MOBILE NAVIGATION STYLES (This is the corrected section)
 @media (max-width: 768px) {

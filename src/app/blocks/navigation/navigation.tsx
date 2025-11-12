@@ -86,8 +86,12 @@ const navigationData: Record<string, DropdownContent> = {
   }
 };
 
+interface NavigationProps {
+  isOpen: boolean;
+  onLinkClick: () => void;
+}
 
-export default function Navigation({ isOpen }: { isOpen: boolean }) {
+export default function Navigation({ isOpen, onLinkClick }: NavigationProps) {
   return (
     <nav className={`nav-sections ${isOpen ? 'is-open' : ''}`}>
       <ul className="nav-menu">

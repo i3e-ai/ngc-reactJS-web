@@ -12,34 +12,12 @@ export default function Header() {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
 
-    if (!isOpen) {
-      document.body.classList.add('no-scroll');
-    } else {
-      document.body.classList.remove('no-scroll');
-    }
   }
 
-  useEffect(() => {
-    const setupNavigation = () => {
-      const navigationMenu = document.querySelector('.nav-menu');
-      if (navigationMenu) {
-        const navLinks = document.querySelectorAll('a');
-        navLinks.forEach((link) => {
-          link.addEventListener('click', () => {
-            setIsOpen(false);
-            document.body.classList.remove('no-scroll')
-          });
-        });
-      } else {
-        setTimeout(setupNavigation, 100);
-      }
-    };
-    setupNavigation();
-
-    return () => {
-      document.body.classList.remove('no-scroll');
-    }
-  }, [])
+  const handleLinkClick = () => {
+    setIsOpen(false);
+    document.body.classList.remove('no-scroll');
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -84,7 +62,7 @@ export default function Header() {
       <div className="header block">
         <div className="header-content">
           <div className="nav-hamburger" onClick={toggleMenu}>
-            <button className="hamburger-button"><b>☰</b></button>
+            <button className="hamburger-button" type="button" aria-label="Toggle navigation menu" aria-expanded={isOpen}>☰</button>
           </div>
           <div className="title-block">
             <Image src="/assets/logo.png" alt="logo" width={64} height={56} />
@@ -93,8 +71,8 @@ export default function Header() {
             </div>
           </div>
         </div>
-        <div className="naviagation-content">
-          <Navigation isOpen={isOpen} />
+        <div className="navigation-content">
+          <Navigation isOpen={isOpen} onLinkClick={handleLinkClick} />
         </div>
       </div>
     </div>

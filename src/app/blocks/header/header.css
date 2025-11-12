@@ -24,17 +24,17 @@
   margin: 0;
 }
 .header.block .nav-hamburger {
-  display: none;
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.header.block .nav-hamburger button {
+  padding: 8px;
   cursor: pointer;
   background: none;
   border: none;
-  color: black;
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 24px;
-  z-index: 1000;
+  font-size: larger;
 }
 @media (min-width: 769px) {
   .nav-sections .nav-menu {
