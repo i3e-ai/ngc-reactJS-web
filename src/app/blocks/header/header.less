@@ -36,6 +36,8 @@
     left: @space-2;
     top: 50%;
     transform: translateY(-50%);
+    display: none; // Hide by default on desktop
+    z-index: 1001; // Higher than the overlay
 
     // hamburger button
     button {
@@ -43,13 +45,17 @@
       cursor: pointer;
       background: none;
       border: none;
-      font-size:larger;
+      font-size:xx-large;
     }
   }
 }
 
 // 2. DESKTOP NAVIGATION STYLES
 @media (min-width: 769px) {
+  .header.block .nav-hamburger {
+    display: none; // Explicitly hide on desktop
+  }
+
   .nav-sections {
     .nav-menu {
       display: flex;
@@ -72,11 +78,15 @@
   }
 }
 
-// 3. MOBILE NAVIGATION STYLES (This is the corrected section)
+// 3. MOBILE NAVIGATION STYLES
 @media (max-width: 768px) {
   // Show the hamburger on mobile
   .header.block .nav-hamburger {
     display: block;
+    z-index: 1001; // Always on top
+    button{
+      font-size: larger;
+    }
   }
 
   // By default, the mobile nav is hidden
@@ -89,13 +99,13 @@
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 0; // Cover the full screen
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: @background-primary; // Dark background
-    padding: 80px 20px 20px; // Add top padding to not overlap header content
-    z-index: 999;
+    background: @background-primary;
+    padding: 100px 40px 40px;
+    z-index: 1000; // Below hamburger
     overflow-y: auto;
   }
 
@@ -118,8 +128,7 @@
     text-decoration: none;
     display: block;
     padding: 20px 10px;
-    border-bottom: 1px solid #444;
-  }
+  }  
 
   // Ensure the complex desktop dropdowns are ALWAYS hidden on mobile
   .nav-sections .dropdown-content {

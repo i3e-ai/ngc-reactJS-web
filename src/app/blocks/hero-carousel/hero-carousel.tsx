@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from 'next/image';
-import './hero-carousel.css';
+import Link from 'next/link';
+import './hero-carousel.css'
+import { carouselSlides } from '@/app/data/carouselSlides';
 
 interface CarouselItem {
   image: string;
@@ -12,45 +14,21 @@ interface CarouselItem {
   buttonLink: string;
 }
 
-const slides: CarouselItem[] = [
-  {
-    image: '/assets/carousel/slide1.png',
-    title: 'Welcome to Our Platform',
-    subtitle: 'Discover Amazing Features',
-    buttonText: 'Learn More',
-    buttonLink: '/features'
-  },
-  {
-    image: '/assets/carousel/slide2.png',
-    title: 'Built for Performance',
-    subtitle: 'Lightning Fast Experience',
-    buttonText: 'Explore Now',
-    buttonLink: '/performance'
-  },
-  {
-    image: '/assets/carousel/slide3.jpg',
-    title: 'Edge Delivery Services',
-    subtitle: 'Ready for your content',
-    buttonText: 'See Details',
-    buttonLink: '/security'
-  }
-];
+interface HeroCarouselProps {
+  slides?: CarouselItem[];
+}
 
-export default function HeroCarousel() {
+export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  const goToSlide = useCallback((index: number) => {
-    setCurrentSlide(index);
-  }, []);
-
+  const goToSlide = (index: number) => setCurrentSlide(index);
   const goToNext = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
-  }, []);
-
+  }, [slides.length]);
   const goToPrev = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  }, []);
+  }, [slides.length]);
 
   useEffect(() => {
     if (!isAutoPlaying || slides.length <= 1) return undefined;
@@ -60,7 +38,7 @@ export default function HeroCarousel() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, goToNext]);
+  }, [isAutoPlaying, goToNext, slides.length]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -96,11 +74,23 @@ export default function HeroCarousel() {
   }
 
   return (
-    <div className="hero-carousel-container">
-      <div className="hero-carousel-track">
+    <div
+      className="hero-carousel-container"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Featured content carousel"
+    >
+      <div
+        className="hero-carousel-track"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {slides.map((slide, index) => (
           <div
             key={index}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`Slide ${index + 1} of ${slides.length}`}
             className={`slide ${index === currentSlide ? 'active' : ''}`}
           >
             <div className="slide-image">
@@ -112,12 +102,13 @@ export default function HeroCarousel() {
                 loading={index === 0 ? 'eager' : 'lazy'}
               />
             </div>
+
             <div className="slide-text">
               <h2 className="slide-title">{slide.title}</h2>
-              <h3 className="slide-subtitle">{slide.subtitle}</h3>
-              <a href={slide.buttonLink} className="slide-button">
+              <p className="slide-subtitle">{slide.subtitle}</p>
+              <Link href={slide.buttonLink} className="slide-button">
                 {slide.buttonText}
-              </a>
+              </Link>
             </div>
           </div>
         ))}

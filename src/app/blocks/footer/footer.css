@@ -54,3 +54,8 @@
   color: #636363;
   margin: 0;
 }
+@media (max-width: 768px) {
+  .footer-block {
+    padding: 1.5rem 1rem;
+  }
+}
