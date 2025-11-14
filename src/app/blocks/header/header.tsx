@@ -63,7 +63,7 @@ export default function Header() {
   }, [isOpen]);
 
   return (
-    <div ref={headerRef} className="header">
+    <header ref={headerRef} className="header">
       <div className="header__wrapper">
         <div className="header__content">
           <div className="header__hamburger" onClick={toggleMenu}>
@@ -80,6 +80,6 @@ export default function Header() {
           <Navigation isOpen={isOpen} onLinkClick={handleLinkClick} />
         </div>
       </div>
-    </div>
+    </header>
   );
 }

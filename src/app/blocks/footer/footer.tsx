@@ -5,7 +5,7 @@ import "./footer.css"
 
 export default function Footer() {
   return (
-    <div className="footer">
+    <footer className="footer">
       <div className="footer__content">
         <div className="footer__section">
           <h3>About</h3>
@@ -25,6 +25,6 @@ export default function Footer() {
       <div className="footer__bottom">
         <p>All Rights Reserved</p>
       </div>
-    </div>
+    </footer>
   )
 }

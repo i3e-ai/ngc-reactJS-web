@@ -5,18 +5,6 @@ import Link from 'next/link';
 import './navigation.css';
 import { navigationData } from '@/app/data/navigationData'
 
-interface DropdownContent {
-  mainHref: string;
-  links?: { text: string; href: string }[];
-  featured?: {
-    image: string;
-    title: string;
-    subtitle: string;
-    buttonText: string;
-    buttonLink: string;
-  };
-}
-
 interface NavigationProps {
   isOpen: boolean;
   onLinkClick: () => void;
@@ -110,8 +98,8 @@ export default function Navigation({ isOpen, onLinkClick }: NavigationProps) {
 
             {content.links && (
               <div className="nav__dropdown">
-                <div className="nav__dropdown-container">
-                  <div className="nav__dropdown-menu">
+                <section className="nav__dropdown-container">
+                  <nav className="nav__dropdown-menu">
                     {content.links.map((link, linkIndex) => (
                       <Link
                         key={linkIndex}
@@ -123,10 +111,10 @@ export default function Navigation({ isOpen, onLinkClick }: NavigationProps) {
                         {link.text}
                       </Link>
                     ))}
-                  </div>
+                  </nav>
 
                   {content.featured && (
-                    <div className="nav__dropdown-image">
+                    <section className="nav__dropdown-image">
                       <Image
                         src={content.featured.image}
                         alt={content.featured.title}
@@ -146,9 +134,9 @@ export default function Navigation({ isOpen, onLinkClick }: NavigationProps) {
                           {content.featured.buttonText}
                         </Link>
                       </div>
-                    </div>
+                    </section>
                   )}
-                </div>
+                </section>
               </div>
             )}
           </li>

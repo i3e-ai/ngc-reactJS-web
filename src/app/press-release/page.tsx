@@ -45,13 +45,13 @@ const PressReleasePage: React.FC = () => {
             className="press-release__info"
             dangerouslySetInnerHTML={{ __html: release.infoHTML }}
           />
-          <div>
+          <nav>
             {release.linkURL && (
               <a href={release.linkURL} className="press-release__button" download>
                 Download
               </a>
             )}
-          </div>
+          </nav>
         </div>
       ))}
     </section>

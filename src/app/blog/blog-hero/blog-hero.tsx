@@ -12,7 +12,7 @@ const BlogHero: React.FC<BlogHeroProps> = ({ imageUrl, contentHTML }) => {
       className="blog-hero"
       style={{ backgroundImage: `url(${imageUrl})` }}
     >
-      <div
+      <header
         className="blog-hero__content"
         dangerouslySetInnerHTML={{ __html: contentHTML }}
       />

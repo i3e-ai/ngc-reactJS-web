@@ -93,7 +93,7 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
             aria-label={`Slide ${index + 1} of ${slides.length}`}
             className={`carousel__slide ${index === currentSlide ? 'carousel__slide--active' : ''}`}
           >
-            <div className="carousel__image">
+            <figure className="carousel__image">
               <Image
                 src={slide.image}
                 alt={slide.title}
@@ -101,21 +101,21 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
                 priority={index === 0}
                 loading={index === 0 ? 'eager' : 'lazy'}
               />
-            </div>
+            </figure>
 
-            <div className="carousel__content">
+            <nav className="carousel__content">
               <h2 className="carousel__title">{slide.title}</h2>
               <p className="carousel__subtitle">{slide.subtitle}</p>
               <Link href={slide.buttonLink} className="carousel__button">
                 {slide.buttonText}
               </Link>
-            </div>
+            </nav>
           </div>
         ))}
       </div>
 
       {slides.length > 1 && (
-        <>
+        <section>
           <button
             type="button"
             className="carousel__button-nav carousel__button-nav--prev"
@@ -148,7 +148,7 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
               />
             </svg>
           </button>
-        </>
+        </section>
       )}
 
       {slides.length > 1 && (

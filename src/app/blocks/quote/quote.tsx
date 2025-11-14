@@ -17,7 +17,7 @@ const quotesData = [
 
 export default function Quote() {
   return (
-    <div className="quote">
+    <section className="quote">
       {quotesData.map((item, index) => (
         <div key={index} className="quote__item">
           <blockquote className="quote__text">
@@ -29,6 +29,6 @@ export default function Quote() {
           </footer>
         </div>
       ))}
-    </div>
+    </section>
   );
 }
