@@ -71,7 +71,7 @@
   align-items: flex-end;
   position: relative;
   width: 700px;
-  border: 1px solid black;
+  border: 1px solid #000000;
 }
 .nav-sections .nav-menu > li.has-dropdown .dropdown-content .dropdown-container .dropdown-image .dropdown-featured-img {
   width: 100%;

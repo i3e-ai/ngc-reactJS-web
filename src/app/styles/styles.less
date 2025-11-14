@@ -1,17 +1,17 @@
 // --- Font Imports & Declarations ---
 
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap"); // Sora font
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap'); // Sora font
 
 @font-face {
   font-family: Geist;
-  src: url("/fonts/Geist-Regular.woff2") format("woff2");
+  src: url('/fonts/Geist-Regular.woff2') format('woff2');
   font-weight: 400; /* Regular */
   font-style: normal;
 }
 
 @font-face {
   font-family: Geist;
-  src: url("/fonts/Geist-Bold.woff2") format("woff2");
+  src: url('/fonts/Geist-Bold.woff2') format('woff2');
   font-weight: 700; /* Bold */
   font-style: normal;
 }
@@ -19,16 +19,16 @@
 // --- Variable Definitions ---
 
 // Fonts
-@font-primary: "Sora", sans-serif;
-@font-secondary: "Geist", sans-serif;
+@font-primary: 'Sora', sans-serif;
+@font-secondary: 'Geist', sans-serif;
 
 // Colors
 @text-primary: #000000;
 @text-secondary: #636363;
-
 @text-hover-transition: #4a4a4a;
-
 @text-white: #f5f5f7;
+@text-navlink:#0071e3;
+@text-navlink-onhover:#0051ba;
 
 // Backgrounds
 @background-primary: #fafafa;
@@ -65,6 +65,8 @@
 @button-br: 2px;
 
 // --- Reset & Base Styles ---
+
+@max-width: 1400px;
 
 *,
 *::before,

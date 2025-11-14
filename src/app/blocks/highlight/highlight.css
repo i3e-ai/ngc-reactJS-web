@@ -9,7 +9,7 @@
 .highlight-slides-container {
   box-sizing: border-box;
   height: 100%;
-  background-color: lightgrey;
+  background-color: #fafafa;
   overflow: hidden;
   position: relative;
 }
@@ -25,11 +25,11 @@
 }
 .highlight-slides-container::before {
   left: 0;
-  background: linear-gradient(90deg, lightgrey 0%, transparent 100%);
+  background: linear-gradient(90deg, #fafafa 0%, transparent 100%);
 }
 .highlight-slides-container::after {
   right: 0;
-  background: linear-gradient(270deg, lightgrey 0%, transparent 100%);
+  background: linear-gradient(270deg, #fafafa 0%, transparent 100%);
 }
 .scrolling-wrapper {
   box-sizing: border-box;

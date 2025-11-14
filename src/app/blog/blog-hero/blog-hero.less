@@ -1,3 +1,4 @@
+@import (reference) '../../styles/styles.less';
 .blog-hero.block {
   position: relative;
   width: 100%;
@@ -12,7 +13,7 @@
   justify-content: center;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -25,12 +26,12 @@
     position: relative;
     z-index: 1;
     max-width: 700px;
-    padding: 2rem;
+    padding: @space-8;
 
     h1,
     h2 {
       margin-top: 0;
-      font-size: 2.5rem;
+      font-size: @space-12;
     }
   }
 }

@@ -2,13 +2,13 @@ main .section.blog-hero-container .default-content-wrapper {
   text-align: center;
 }
 .blog-content.block {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 0 2rem;
 }
 .blog-content.block p {
   line-height: 1.7;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   margin-bottom: 1.5rem;
 }
 .blog-content.block ul {

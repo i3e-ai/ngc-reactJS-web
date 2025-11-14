@@ -25,7 +25,7 @@
     gap: @space-4;
     padding: 16px;
     .title h1 {
-      color: black;
+      color: @text-primary;
       font-size: @text-3xl;
       margin: 0;
     }
@@ -45,13 +45,13 @@
       cursor: pointer;
       background: none;
       border: none;
-      font-size:xx-large;
+      font-size: xx-large;
     }
   }
 }
 
 // 2. DESKTOP NAVIGATION STYLES
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   .header.block .nav-hamburger {
     display: none; // Explicitly hide on desktop
   }
@@ -65,7 +65,7 @@
       gap: @space-4;
 
       .has-dropdown a {
-        color: black;
+        color: @text-primary;
         text-decoration: none;
         padding: 10px 15px;
         border-radius: @card-br;
@@ -84,7 +84,7 @@
   .header.block .nav-hamburger {
     display: block;
     z-index: 1001; // Always on top
-    button{
+    button {
       font-size: larger;
     }
   }
@@ -122,13 +122,13 @@
 
   // Style the individual links for mobile
   .nav-sections.is-open .nav-menu > li > a {
-    color: white;
+    color: @background-primary;
     font-size: 24px;
     font-weight: bold;
     text-decoration: none;
     display: block;
     padding: 20px 10px;
-  }  
+  }
 
   // Ensure the complex desktop dropdowns are ALWAYS hidden on mobile
   .nav-sections .dropdown-content {

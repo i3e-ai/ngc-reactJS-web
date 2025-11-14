@@ -1,11 +1,9 @@
-@import (reference) "../../styles/styles.less";
+@import (reference) '../../styles/styles.less';
 
 // VARIABLES
-@mobile-breakpoint: 768px;
 @overlay-bg: rgba(255, 255, 255, 1);
 @dropdown-transition: 0.4s;
 @dropdown-top-offset: 140px;
-@dropdown-max-width: 1400px;
 @dropdown-height: 400px;
 @dropdown-padding: 40px 60px;
 @dropdown-gap: 100px;
@@ -48,7 +46,7 @@
           // Main flex container for nav + image
           .dropdown-container {
             display: flex;
-            max-width: @dropdown-max-width;
+            max-width: @max-width;
             margin: 0 auto;
             padding: @dropdown-padding;
             height: @dropdown-height;
@@ -81,7 +79,7 @@
               align-items: flex-end;
               position: relative;
               width: 700px;
-              border: 1px solid black;
+              border: 1px solid @background-black;
 
               // Featured image
               .dropdown-featured-img {
@@ -157,7 +155,7 @@
 }
 
 // MOBILE RESPONSIVE
-@media (max-width: @mobile-breakpoint) {
+@media (max-width: 768px) {
   .nav-sections {
     .nav-menu {
       flex-direction: column;

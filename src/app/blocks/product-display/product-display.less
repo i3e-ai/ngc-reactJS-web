@@ -1,10 +1,7 @@
-@import (reference) "../../styles/styles.less";
-
-@card-border-radius: 4px;
-@button-border-radius: 2px;
+@import (reference) '../../styles/styles.less';
 
 main .section.productdisplay-container {
-  max-width: 1250px;
+  max-width: @max-width;
   margin: 0 auto;
   padding: 0 2rem;
   box-sizing: border-box;
@@ -20,7 +17,7 @@ main .section.productdisplay-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  max-width: 1200px;
+  max-width: @max-width;
   margin: 1rem auto;
   padding: 0 0;
 }
@@ -30,7 +27,7 @@ main .section.productdisplay-container {
   flex-direction: column;
   background-color: @background-cards;
   border: none;
-  border-radius: @card-border-radius;
+  border-radius: @card-br;
   box-shadow: 0 6px 18px rgb(0 0 0 / 7%);
   overflow: hidden;
   font-family: @font-secondary;

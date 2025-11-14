@@ -11,7 +11,7 @@
   justify-content: center;
 }
 .blog-hero.block::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -28,5 +28,5 @@
 .blog-hero.block .hero-content h1,
 .blog-hero.block .hero-content h2 {
   margin-top: 0;
-  font-size: 2.5rem;
+  font-size: 3rem;
 }

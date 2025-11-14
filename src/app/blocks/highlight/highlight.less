@@ -13,7 +13,7 @@
 .highlight-slides-container {
   box-sizing: border-box;
   height: 100%;
-  background-color: lightgrey;
+  background-color: @background-primary;
   overflow: hidden;
   position: relative;
 
@@ -31,12 +31,20 @@
 
   &::before {
     left: 0;
-    background: linear-gradient(90deg, lightgrey 0%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      @background-primary 0%,
+      transparent 100%
+    );
   }
 
   &::after {
     right: 0;
-    background: linear-gradient(270deg, lightgrey 0%, transparent 100%);
+    background: linear-gradient(
+      270deg,
+      @background-primary 0%,
+      transparent 100%
+    );
   }
 }
 

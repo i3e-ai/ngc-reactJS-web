@@ -22,7 +22,7 @@ const pressReleasesData: PressReleaseItem[] = [
   {
     titleHTML: '<h3>Strategic Partnership with FutureTech Inc.</h3>',
     infoHTML: '<p>Published on: August 15, 2025</p>',
-    // This item has no download link
+    linkURL: '/downloads/innovate-x-press-kit.zip',
   },
   {
     titleHTML: '<h3>Company Expands Operations to Europe</h3>',
