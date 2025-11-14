@@ -1,6 +1,6 @@
-@import (reference) "../../styles/styles.less";
+@import (reference) '../../styles/styles.less';
 
-.quote-block {
+.quote {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,12 +10,12 @@
   margin: 0 auto;
   padding: @space-8;
 
-  > div {
+  &__item {
     width: 100%;
     text-align: center;
   }
 
-  .quote-text {
+  &__text {
     font-size: @text-2xl;
     font-weight: 600;
     color: @text-primary;
@@ -24,41 +24,39 @@
     font-style: italic;
   }
 
-  .quote-author-info {
+  &__footer {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
 
-    .quote-author {
-      font-size: @text-base;
-      font-weight: 700;
-      color: @text-primary;
-    }
+  &__author {
+    font-size: @text-base;
+    font-weight: 700;
+    color: @text-primary;
+  }
 
-    .quote-title {
-      font-size: @text-sm;
-      color: @text-secondary;
-      font-style: normal;
-    }
+  &__title {
+    font-size: @text-sm;
+    color: @text-secondary;
+    font-style: normal;
   }
 
   // Mobile Responsive
   @media (max-width: 768px) {
     padding: @space-6 @space-4;
 
-    .quote-text {
+    &__text {
       font-size: @text-xl;
       margin-bottom: @space-4;
     }
 
-    .quote-author-info {
-      .quote-author {
-        font-size: @text-base;
-      }
+    &__author {
+      font-size: @text-base;
+    }
 
-      .quote-title {
-        font-size: @text-sm;
-      }
+    &__title {
+      font-size: @text-sm;
     }
   }
 }

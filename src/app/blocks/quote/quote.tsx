@@ -17,15 +17,15 @@ const quotesData = [
 
 export default function Quote() {
   return (
-    <div className="quote-block">
+    <div className="quote">
       {quotesData.map((item, index) => (
-        <div key={index}>
-          <blockquote className="quote-text">
+        <div key={index} className="quote__item">
+          <blockquote className="quote__text">
             &quot;{item.quote}&quot;
           </blockquote>
-          <footer className="quote-author-info">
-            <span className="quote-author">{item.author}</span>
-            <cite className="quote-title">{item.title}</cite>
+          <footer className="quote__footer">
+            <span className="quote__author">{item.author}</span>
+            <cite className="quote__title">{item.title}</cite>
           </footer>
         </div>
       ))}

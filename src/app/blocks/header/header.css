@@ -1,9 +1,12 @@
-.header-wrapper {
+.header {
   position: relative;
   z-index: 100;
   background: #fafafa;
 }
-.header.block .header-content {
+.header__wrapper {
+  background: #fafafa;
+}
+.header__content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,18 +15,23 @@
   margin: 0 auto;
   height: 70px;
 }
-.header.block .title-block {
+.header__brand {
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 16px;
 }
-.header.block .title-block .title h1 {
+.header__brand h1 {
   color: #000000;
   font-size: 2.5rem;
   margin: 0;
 }
-.header.block .nav-hamburger {
+.header__title h1 {
+  color: #000000;
+  font-size: 2.5rem;
+  margin: 0;
+}
+.header__hamburger {
   position: absolute;
   left: 0.5rem;
   top: 50%;
@@ -31,47 +39,47 @@
   display: none;
   z-index: 1001;
 }
-.header.block .nav-hamburger button {
+.header__hamburger-button {
   padding: 8px;
   cursor: pointer;
   background: none;
   border: none;
   font-size: xx-large;
 }
-@media (min-width: 768px) {
-  .header.block .nav-hamburger {
-    display: none;
+.header__navigation {
+  width: 100%;
+}
+@media (min-width: 769px) {
+  .header__hamburger {
+    display: none !important;
   }
-  .nav-sections .nav-menu {
+  .header .nav-menu {
     display: flex;
     list-style: none;
     padding: 0;
     margin: 0;
     gap: 1rem;
   }
-  .nav-sections .nav-menu .has-dropdown a {
+  .header .nav-menu .has-dropdown a {
     color: #000000;
     text-decoration: none;
     padding: 10px 15px;
     border-radius: 4px;
     transition: color 0.3s ease;
   }
-  .nav-sections .nav-menu .has-dropdown a:hover {
+  .header .nav-menu .has-dropdown a:hover {
     color: #4a4a4a;
   }
 }
 @media (max-width: 768px) {
-  .header.block .nav-hamburger {
+  .header__hamburger {
     display: block;
     z-index: 1001;
   }
-  .header.block .nav-hamburger button {
-    font-size: larger;
-  }
-  .nav-sections {
+  .header__navigation {
     display: none;
   }
-  .nav-sections.is-open {
+  .header__navigation.is-open {
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -84,7 +92,7 @@
     z-index: 1000;
     overflow-y: auto;
   }
-  .nav-sections.is-open .nav-menu {
+  .header .nav-menu {
     display: flex;
     flex-direction: column;
     list-style: none;
@@ -93,7 +101,7 @@
     width: 100%;
     gap: 0;
   }
-  .nav-sections.is-open .nav-menu > li > a {
+  .header .nav-menu > li > a {
     color: #fafafa;
     font-size: 24px;
     font-weight: bold;
@@ -101,7 +109,7 @@
     display: block;
     padding: 20px 10px;
   }
-  .nav-sections .dropdown-content {
+  .header .dropdown-content {
     display: none !important;
   }
 }

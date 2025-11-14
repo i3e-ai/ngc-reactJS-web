@@ -3,28 +3,31 @@
 main .section.blog-hero-container .default-content-wrapper {
   text-align: center;
 }
-.blog-content.block {
+
+.blog-content {
   max-width: 1200px;
   margin: @space-8 auto;
   padding: 0 @space-8;
 
-  p {
-    line-height: 1.7;
-    font-size: @text-xl;
-    margin-bottom: @space-6;
-  }
-
-  ul {
-    padding-left: 20px;
-    margin-bottom: @space-6;
-
-    li {
-      margin-bottom: 0.75rem;
-      line-height: 1.6;
+  &__body {
+    p {
+      line-height: 1.7;
+      font-size: @text-xl;
+      margin-bottom: @space-6;
     }
-  }
 
-  > :first-child {
-    margin-top: 0;
+    ul {
+      padding-left: 20px;
+      margin-bottom: @space-6;
+
+      li {
+        margin-bottom: 0.75rem;
+        line-height: 1.6;
+      }
+    }
+
+    > :first-child {
+      margin-top: 0;
+    }
   }
 }

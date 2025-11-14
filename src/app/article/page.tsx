@@ -58,18 +58,18 @@ const ArticlePage: React.FC = () => {
   return (
     <section>
       <h1 id="articles">Articles</h1>
-      <div className="article block">
+      <div className="article">
         {ArticleData.map((article, index) => (
-          <article key={index} className="article-item">
-            <div className="article-image">
+          <article key={index} className="article__item">
+            <div className="article__image">
               <Image
                 src={article.image.src}
                 alt={article.image.alt}
-                width={700} // Provide base width for aspect ratio
-                height={300} // Provide base height for aspect ratio
+                width={700}
+                height={300}
               />
             </div>
-            <div className="article-text">
+            <div className="article__content">
               <h1>{article.body.mainTitle}</h1>
 
               {article.body.paragraphs.map((paragraph, pIndex) => (

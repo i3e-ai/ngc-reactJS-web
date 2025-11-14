@@ -75,13 +75,13 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
 
   return (
     <div
-      className="hero-carousel-container"
+      className="carousel"
       role="region"
       aria-roledescription="carousel"
       aria-label="Featured content carousel"
     >
       <div
-        className="hero-carousel-track"
+        className="carousel__track"
         aria-live="polite"
         aria-atomic="false"
       >
@@ -91,9 +91,9 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
             role="group"
             aria-roledescription="slide"
             aria-label={`Slide ${index + 1} of ${slides.length}`}
-            className={`slide ${index === currentSlide ? 'active' : ''}`}
+            className={`carousel__slide ${index === currentSlide ? 'carousel__slide--active' : ''}`}
           >
-            <div className="slide-image">
+            <div className="carousel__image">
               <Image
                 src={slide.image}
                 alt={slide.title}
@@ -103,10 +103,10 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
               />
             </div>
 
-            <div className="slide-text">
-              <h2 className="slide-title">{slide.title}</h2>
-              <p className="slide-subtitle">{slide.subtitle}</p>
-              <Link href={slide.buttonLink} className="slide-button">
+            <div className="carousel__content">
+              <h2 className="carousel__title">{slide.title}</h2>
+              <p className="carousel__subtitle">{slide.subtitle}</p>
+              <Link href={slide.buttonLink} className="carousel__button">
                 {slide.buttonText}
               </Link>
             </div>
@@ -118,7 +118,7 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
         <>
           <button
             type="button"
-            className="carousel-nav prev"
+            className="carousel__button-nav carousel__button-nav--prev"
             onClick={() => handleNavClick('prev')}
             aria-label="Previous slide"
           >
@@ -134,7 +134,7 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
           </button>
           <button
             type="button"
-            className="carousel-nav next"
+            className="carousel__button-nav carousel__button-nav--next"
             onClick={() => handleNavClick('next')}
             aria-label="Next slide"
           >
@@ -152,12 +152,12 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
       )}
 
       {slides.length > 1 && (
-        <div className="carousel-dots">
+        <div className="carousel__dots">
           {slides.map((_, index) => (
             <button
               key={index}
               type="button"
-              className={`dot ${index === currentSlide ? 'active' : ''}`}
+              className={`carousel__dot ${index === currentSlide ? 'carousel__dot--active' : ''}`}
               onClick={() => handleDotClick(index)}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -168,7 +168,7 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
       {slides.length > 1 && (
         <button
           type="button"
-          className="carousel-play-pause"
+          className="carousel__control-play-pause"
           onClick={() => setIsAutoPlaying(!isAutoPlaying)}
           aria-label={isAutoPlaying ? 'Pause carousel' : 'Play carousel'}
         >

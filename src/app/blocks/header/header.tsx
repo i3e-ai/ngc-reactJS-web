@@ -63,20 +63,20 @@ export default function Header() {
   }, [isOpen]);
 
   return (
-    <div ref={headerRef} className="header-wrapper">
-      <div className="header block">
-        <div className="header-content">
-          <div className="nav-hamburger" onClick={toggleMenu}>
-            <button className="hamburger-button" type="button" aria-label="Toggle navigation menu" aria-expanded={isOpen}>☰</button>
+    <div ref={headerRef} className="header">
+      <div className="header__wrapper">
+        <div className="header__content">
+          <div className="header__hamburger" onClick={toggleMenu}>
+            <button className="header__hamburger-button" type="button" aria-label="Toggle navigation menu" aria-expanded={isOpen}>☰</button>
           </div>
-          <div className="title-block">
+          <div className="header__brand">
             <Image src="/assets/logo.png" alt="logo" width={64} height={56} />
-            <div className="title">
+            <div className="header__title">
               <h1>EDS App</h1>
             </div>
           </div>
         </div>
-        <div className="navigation-content">
+        <div className="header__navigation">
           <Navigation isOpen={isOpen} onLinkClick={handleLinkClick} />
         </div>
       </div>

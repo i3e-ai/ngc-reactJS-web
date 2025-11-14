@@ -1,6 +1,5 @@
 @import (reference) '../../styles/styles.less';
 
-// VARIABLES
 @overlay-bg: rgba(255, 255, 255, 1);
 @dropdown-transition: 0.4s;
 @dropdown-top-offset: 140px;
@@ -8,162 +7,146 @@
 @dropdown-padding: 40px 60px;
 @dropdown-gap: 100px;
 
-// NAVIGATION COMPONENT (.nav-sections)
-.nav-sections {
-  // Main menu container
-  .nav-menu {
+.nav {
+  &__menu {
     display: flex;
     justify-content: flex-start;
     height: 50px;
     list-style: none;
     margin: 0;
     padding: 0 1px;
+  }
 
-    // MENU ITEM (> li)
-    > li {
-      margin: 0 15px;
+  &__item {
+    margin: 0 15px;
 
-      > a {
-        .a();
-        color: @text-primary;
-        font-size: 16px;
-      }
+    > a {
+      .a();
+      color: @text-primary;
+      font-size: 16px;
+    }
 
-      // DROPDOWN WRAPPER (.has-dropdown)
-      &.has-dropdown {
-        // DROPDOWN CONTENT (.dropdown-content)
-        // Full page dropdown with image
-        .dropdown-content {
-          position: fixed !important;
-          inset: @dropdown-top-offset 0 0;
-          background: @overlay-bg;
-          z-index: 999;
-          display: none !important;
-          opacity: 0;
-          transition: opacity @dropdown-transition;
+    &--no-dropdown &__dropdown {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none;
+    }
 
-          // DROPDOWN CONTAINER (.dropdown-container)
-          // Main flex container for nav + image
-          .dropdown-container {
-            display: flex;
-            max-width: @max-width;
-            margin: 0 auto;
-            padding: @dropdown-padding;
-            height: @dropdown-height;
-            gap: @dropdown-gap;
-            align-items: flex-start;
-            justify-content: space-between;
-
-            // DROPDOWN NAV (.dropdown-nav)
-            // Left side - Navigation links
-            .dropdown-nav {
-              flex: 0 0 400px;
-              padding-top: 60px;
-
-              a {
-                .a();
-                font-size: 32px;
-                font-weight: 400px;
-                line-height: 1.4;
-                margin: 0 0 25px;
-                padding: 12px 0;
-              }
-            }
-
-            // DROPDOWN IMAGE (.dropdown-image)
-            // Right side - Featured image with overlay
-            .dropdown-image {
-              flex: 1;
-              display: flex;
-              justify-content: flex-end;
-              align-items: flex-end;
-              position: relative;
-              width: 700px;
-              border: 1px solid @background-black;
-
-              // Featured image
-              .dropdown-featured-img {
-                width: 100%;
-                height: 560px;
-                object-fit: fill;
-                border-radius: 2px;
-                box-shadow: 0 25px 50px rgb(0 0 0 / 40%);
-              }
-
-              // IMAGE OVERLAY (.image-overlay)
-              // Text overlay on featured image
-              .image-overlay {
-                position: absolute;
-                bottom: 20px;
-                left: 20px;
-                text-align: left;
-                z-index: 10;
-
-                .overlay-title {
-                  &:extend(.title);
-                  font-size: @text-3xl;
-                  margin: 0;
-                  text-shadow: 0 2px 4px rgb(0 0 0 / 50%);
-                }
-
-                .overlay-subtitle {
-                  &:extend(.subtitle);
-                  text-shadow: 0 2px 4px rgb(0 0 0 / 50%);
-                }
-
-                .overlay-button {
-                  .button();
-                }
-              }
-            }
-          }
-        }
-
-        // SIMPLE DROPDOWN (.dropdown-simple)
-        // Alternative: Simple dropdown without image
-        .dropdown-content.dropdown-simple {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          inset: auto;
-          background: @overlay-bg;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          padding: 10px 0;
-          min-width: 200px;
-          flex-direction: column;
-
-          a {
-            .a();
-            padding: 10px 20px;
-            display: block;
-
-            &:hover {
-              background: rgba(0, 0, 0, 0.05);
-            }
-          }
-        }
-
-        // HOVER STATE
-        // Show dropdown on hover
-        &:hover .dropdown-content {
-          display: flex !important;
-          opacity: 1;
-        }
-      }
+    &:hover &__dropdown {
+      display: flex !important;
+      opacity: 1;
     }
   }
-}
 
-// MOBILE RESPONSIVE
-@media (max-width: 768px) {
-  .nav-sections {
-    .nav-menu {
+  &__dropdown {
+    position: fixed !important;
+    inset: @dropdown-top-offset 0 0;
+    background: @overlay-bg;
+    z-index: 999;
+    display: none !important;
+    opacity: 0;
+    transition: opacity @dropdown-transition;
+  }
+
+  &__dropdown-container {
+    display: flex;
+    max-width: @max-width;
+    margin: 0 auto;
+    padding: @dropdown-padding;
+    height: @dropdown-height;
+    gap: @dropdown-gap;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  &__dropdown-menu {
+    flex: 0 0 400px;
+    padding-top: 60px;
+
+    a {
+      .a();
+      font-size: 32px;
+      font-weight: 400px;
+      line-height: 1.4;
+      margin: 0 0 25px;
+      padding: 12px 0;
+    }
+  }
+
+  &__dropdown-link--focused {
+    font-weight: 600;
+  }
+
+  &__dropdown-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: relative;
+    width: 700px;
+    border: 1px solid @background-black;
+  }
+
+  &__dropdown-img {
+    width: 100%;
+    height: 560px;
+    object-fit: fill;
+    border-radius: 2px;
+    box-shadow: 0 25px 50px rgb(0 0 0 / 40%);
+  }
+
+  &__dropdown-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    text-align: left;
+    z-index: 10;
+  }
+
+  &__dropdown-title {
+    &:extend(.title);
+    font-size: @text-3xl;
+    margin: 0;
+    text-shadow: 0 2px 4px rgb(0 0 0 / 50%);
+  }
+
+  &__dropdown-subtitle {
+    &:extend(.subtitle);
+    text-shadow: 0 2px 4px rgb(0 0 0 / 50%);
+  }
+
+  &__dropdown-button {
+    .button();
+  }
+
+  &--open {
+    .nav__menu {
       flex-direction: column;
       padding: 20px;
       padding-top: 40px;
 
-      > li.has-dropdown {
-        .dropdown-content {
+      .nav__item.nav__item--no-dropdown &__dropdown {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        top: 200px;
+      }
+
+      > a {
+        .a();
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__menu {
+      flex-direction: column;
+      padding: 20px;
+      padding-top: 40px;
+
+      .nav__item {
+        &.nav__item--no-dropdown &__dropdown {
           display: none !important;
           visibility: hidden !important;
           opacity: 0 !important;
@@ -174,23 +157,14 @@
         > a {
           .a();
         }
+      }
+    }
 
-        &.dropdown-open .dropdown-content {
-          display: none !important;
-          visibility: hidden !important;
-
-          li,
-          a {
-            .a();
-            width: 100%;
-          }
-        }
+    &__dropdown-menu {
+      a {
+        .a();
+        width: 100%;
       }
     }
   }
-}
-.has-dropdown.no-dropdown:hover .dropdown-content {
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none; // Also prevents accidental clicks
 }

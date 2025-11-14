@@ -88,16 +88,16 @@ export default function Navigation({ isOpen, onLinkClick }: NavigationProps) {
 
   return (
     <nav
-      className={`nav-sections ${isOpen ? 'is-open' : ''}`}
+      className={`nav ${isOpen ? 'nav--open' : ''}`}
       ref={navRef}
       role="navigation"
       aria-label="Main navigation"
     >
-      <ul className="nav-menu">
+      <ul className="nav__menu">
         {menuItems.map(([key, content], index) => (
           <li
             key={key}
-            className={`has-dropdown ${!content.links ? 'no-dropdown' : ''}`}
+            className={`nav__item ${!content.links ? 'nav__item--no-dropdown' : ''}`}
             data-focused={focusedIndex === index && focusedDropdownIndex === -1}
           >
             <Link
@@ -109,15 +109,15 @@ export default function Navigation({ isOpen, onLinkClick }: NavigationProps) {
             </Link>
 
             {content.links && (
-              <div className="dropdown-content">
-                <div className="dropdown-container">
-                  <div className="dropdown-nav">
+              <div className="nav__dropdown">
+                <div className="nav__dropdown-container">
+                  <div className="nav__dropdown-menu">
                     {content.links.map((link, linkIndex) => (
                       <Link
                         key={linkIndex}
                         href={link.href}
                         onClick={onLinkClick}
-                        className={focusedIndex === index && focusedDropdownIndex === linkIndex ? 'focused' : ''}
+                        className={focusedIndex === index && focusedDropdownIndex === linkIndex ? 'nav__dropdown-link--focused' : ''}
                         tabIndex={isOpen && focusedIndex === index ? 0 : -1}
                       >
                         {link.text}
@@ -126,20 +126,20 @@ export default function Navigation({ isOpen, onLinkClick }: NavigationProps) {
                   </div>
 
                   {content.featured && (
-                    <div className="dropdown-image">
+                    <div className="nav__dropdown-image">
                       <Image
                         src={content.featured.image}
                         alt={content.featured.title}
-                        className="dropdown-featured-img"
+                        className="nav__dropdown-img"
                         width={700}
                         height={560}
                       />
-                      <div className="image-overlay">
-                        <h2 className="overlay-title">{content.featured.title}</h2>
-                        <p className="overlay-subtitle">{content.featured.subtitle}</p>
+                      <div className="nav__dropdown-overlay">
+                        <h2 className="nav__dropdown-title">{content.featured.title}</h2>
+                        <p className="nav__dropdown-subtitle">{content.featured.subtitle}</p>
                         <Link
                           href={content.featured.buttonLink}
-                          className="overlay-button"
+                          className="nav__dropdown-button"
                           onClick={onLinkClick}
                           tabIndex={isOpen ? 0 : -1}
                         >

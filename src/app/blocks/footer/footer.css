@@ -1,4 +1,4 @@
-.footer-block {
+.footer {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -7,55 +7,55 @@
   height: 60px;
   padding: 0.5rem 20rem;
 }
-.footer-block .footer-content {
+.footer__content {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
 }
-.footer-block .footer-content .footer-section h3 {
+.footer__section h3 {
   font-size: 1.25rem;
   margin-bottom: 1rem;
   color: #000000;
 }
-.footer-block .footer-content .footer-section p {
+.footer__section p {
   font-size: 1rem;
   color: #636363;
   margin-bottom: 0.5rem;
 }
-.footer-block .footer-content .nav-section h3 {
+.footer__section--nav h3 {
   font-size: 1.25rem;
   margin-bottom: 1rem;
   color: #000000;
 }
-.footer-block .footer-content .nav-section nav {
+.footer__nav {
   display: flex;
   flex-direction: column;
   margin-top: 0;
   align-items: center;
   gap: 0.6rem;
 }
-.footer-block .footer-content .nav-section nav a {
+.footer__nav a {
   color: #636363;
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.2s ease;
 }
-.footer-block .footer-content .nav-section nav a:hover {
+.footer__nav a:hover {
   color: #4a4a4a;
   text-decoration: underline;
 }
-.footer-block .footer-bottom {
+.footer__bottom {
   text-align: center;
   padding-top: 0.25rem;
   border-top: 1px solid #8c92ac;
 }
-.footer-block .footer-bottom p {
+.footer__bottom p {
   font-size: 0.875rem;
   color: #636363;
   margin: 0;
 }
 @media (max-width: 768px) {
-  .footer-block {
+  .footer {
     padding: 1.5rem 1rem;
   }
 }

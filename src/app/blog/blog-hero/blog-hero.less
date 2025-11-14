@@ -1,5 +1,6 @@
 @import (reference) '../../styles/styles.less';
-.blog-hero.block {
+
+.blog-hero {
   position: relative;
   width: 100%;
   min-height: 400px;
@@ -7,7 +8,6 @@
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,7 +22,7 @@
     background-color: rgb(0 0 0 / 50%);
   }
 
-  .hero-content {
+  &__content {
     position: relative;
     z-index: 1;
     max-width: 700px;

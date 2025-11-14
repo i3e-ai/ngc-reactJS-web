@@ -1,24 +1,24 @@
 main .section.blog-hero-container .default-content-wrapper {
   text-align: center;
 }
-.blog-content.block {
+.blog-content {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 2rem;
 }
-.blog-content.block p {
+.blog-content__body p {
   line-height: 1.7;
   font-size: 1.25rem;
   margin-bottom: 1.5rem;
 }
-.blog-content.block ul {
+.blog-content__body ul {
   padding-left: 20px;
   margin-bottom: 1.5rem;
 }
-.blog-content.block ul li {
+.blog-content__body ul li {
   margin-bottom: 0.75rem;
   line-height: 1.6;
 }
-.blog-content.block > :first-child {
+.blog-content__body > :first-child {
   margin-top: 0;
 }

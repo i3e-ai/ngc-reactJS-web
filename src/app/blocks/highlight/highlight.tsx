@@ -23,12 +23,12 @@ const Highlight: React.FC = () => {
   const duplicatedSlides = [...slides, ...slides];
 
   return (
-    <div className="highlight-slides-container">
-      <div className="scrolling-wrapper">
+    <div className="highlight">
+      <div className="highlight__wrapper">
         {duplicatedSlides.map((slide, index) => (
           <div
             key={`${slide.id}-${index}`}
-            className="highlight-slide"
+            className="highlight__slide"
             role="status"
             aria-live="polite"
           >

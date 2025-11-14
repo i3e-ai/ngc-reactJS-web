@@ -26,16 +26,16 @@ const ContentCurator: React.FC<ContentCuratorProps> = ({ curatorData = contentCu
   const scrollData = [...curatorData, ...curatorData, ...curatorData];
 
   return (
-    <div className="content-curator-block">
-      <div className="curator-container">
-        <div className="curator-header">
-          <h2 className="curator-title">Discover what you can do</h2>
+    <div className="curator">
+      <div className="curator__container">
+        <div className="curator__header">
+          <h2 className="curator__title">Discover what you can do</h2>
         </div>
-        <div className="curator-gallery-wrapper">
-          <div className="curator-gallery">
+        <div className="curator__gallery-wrapper">
+          <div className="curator__gallery">
             {scrollData.map((item, index) => (
-              <div className="gallery-item" key={index}>
-                <div className="item-media">
+              <div className="curator__item" key={index}>
+                <div className="curator__media">
                   <Image
                     src={item.image.src}
                     alt={item.image.alt}
@@ -44,10 +44,10 @@ const ContentCurator: React.FC<ContentCuratorProps> = ({ curatorData = contentCu
                     loading="lazy"
                   />
                 </div>
-                <div className="item-content">
-                  <h4 className="item-eyebrow">{item.eyebrow}</h4>
-                  <h3 className="item-title">{item.title}</h3>
-                  <a href={item.link.href} className="item-link">
+                <div className="curator__content">
+                  <h4 className="curator__eyebrow">{item.eyebrow}</h4>
+                  <h3 className="curator__item-title">{item.title}</h3>
+                  <a href={item.link.href} className="curator__link">
                     {item.link.text}
                   </a>
                 </div>

@@ -1,6 +1,5 @@
 @import (reference) '../../styles/styles.less';
 
-// Keyframes for carousel animation
 @keyframes slide-carousel {
   from {
     transform: translateX(0%);
@@ -10,39 +9,39 @@
   }
 }
 
-// Variables
 @carousel-gap: 2rem;
 @carousel-item-width: 400px;
 @carousel-duration: 30s;
 @carousel-image-height: 250px;
 
-.content-curator-block {
+.curator {
   width: 100%;
   padding: @space-8 0;
   background: @background-white;
   overflow: hidden;
 
-  .curator-container {
+  &__container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 @space-4;
   }
 
-  .curator-header {
+  &__header {
     text-align: center;
     margin-bottom: @space-8;
-
-    .curator-title {
-      font-size: @text-4xl;
-      font-weight: 700;
-      color: @text-primary;
-      margin: 0;
-    }
   }
 
-  .curator-gallery-wrapper {
+  &__title {
+    font-size: @text-4xl;
+    font-weight: 700;
+    color: @text-primary;
+    margin: 0;
+  }
+
+  &__gallery-wrapper {
     overflow: hidden;
     position: relative;
+
     &::before,
     &::after {
       content: '';
@@ -55,7 +54,7 @@
     }
   }
 
-  .curator-gallery {
+  &__gallery {
     display: flex;
     gap: @space-6;
     animation: scroll 20s linear infinite;
@@ -64,66 +63,65 @@
     &:hover {
       animation-play-state: paused;
     }
+  }
 
-    .gallery-item {
-      flex: 0 0 calc(33.333% - @space-4);
-      min-width: 150px;
-      background: @background-cards;
-      border-radius: @card-br;
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
+  &__item {
+    flex: 0 0 calc(33.333% - @space-4);
+    min-width: 150px;
+    background: @background-cards;
+    border-radius: @card-br;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
 
-      .item-media {
-        position: relative;
-        width: 100%;
-        height: 250px;
-        overflow: hidden;
+  &__media {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
 
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-      }
-
-      .item-content {
-        padding: @space-4;
-
-        .item-eyebrow {
-          font-size: @text-sm;
-          font-weight: 700;
-          color: @text-navlink;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin: 0 0 @space-2 0;
-        }
-
-        .item-title {
-          font-size: @text-lg;
-          font-weight: 600;
-          color: @text-primary;
-          margin: 0 0 @space-2 0;
-          line-height: 1.4;
-        }
-
-        .item-link {
-          color: @text-navlink;
-          text-decoration: none;
-          font-weight: 500;
-          transition: color 0.2s ease;
-
-          &:hover {
-            color: @text-navlink-onhover;
-            text-decoration: underline;
-          }
-        }
-      }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
     }
   }
 
-  // Animations
+  &__content {
+    padding: @space-4;
+  }
+
+  &__eyebrow {
+    font-size: @text-sm;
+    font-weight: 700;
+    color: @text-navlink;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 @space-2 0;
+  }
+
+  &__item-title {
+    font-size: @text-lg;
+    font-weight: 600;
+    color: @text-primary;
+    margin: 0 0 @space-2 0;
+    line-height: 1.4;
+  }
+
+  &__link {
+    color: @text-navlink;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: @text-navlink-onhover;
+      text-decoration: underline;
+    }
+  }
+
   @keyframes scroll {
     0% {
       transform: translateX(0);
@@ -136,25 +134,24 @@
     }
   }
 
-  // Mobile responsive
   @media (max-width: 768px) {
     padding: @space-6 0;
 
-    .curator-header {
+    &__header {
       margin-bottom: @space-6;
-
-      .curator-title {
-        font-size: @text-2xl;
-      }
     }
 
-    .curator-gallery {
+    &__title {
+      font-size: @text-2xl;
+    }
+
+    &__gallery {
       gap: @space-4;
       animation: scroll 30s linear infinite;
+    }
 
-      .gallery-item {
-        flex: 0 0 calc(100% - @space-4);
-      }
+    &__item {
+      flex: 0 0 calc(100% - @space-4);
     }
   }
 }

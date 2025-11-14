@@ -34,20 +34,20 @@ const pressReleasesData: PressReleaseItem[] = [
 // 3. Create the React component
 const PressReleasePage: React.FC = () => {
   return (
-    <section className="press-release block">
+    <section className="press-release">
       {pressReleasesData.map((release, index) => (
-        <div key={index} className="press-release-item">
+        <div key={index} className="press-release__item">
           <div
-            className="press-release-title"
+            className="press-release__title"
             dangerouslySetInnerHTML={{ __html: release.titleHTML }}
           />
           <div
-            className="press-release-info"
+            className="press-release__info"
             dangerouslySetInnerHTML={{ __html: release.infoHTML }}
           />
           <div>
             {release.linkURL && (
-              <a href={release.linkURL} className="press-release-button" download>
+              <a href={release.linkURL} className="press-release__button" download>
                 Download
               </a>
             )}

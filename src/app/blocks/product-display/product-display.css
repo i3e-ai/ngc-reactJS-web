@@ -1,25 +1,26 @@
-.productdisplay.block > div .product-details .product-price {
+.product__price {
   font-weight: 500;color: #f5f5f7;
 }
-main .section.productdisplay-container {
-  max-width: 1400px;
+main .section.product-container {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   box-sizing: border-box;
+  background-color: #ffffff;
 }
 #products {
   padding-top: 40px;
   font-size: 2.5rem;
 }
-.productdisplay.block {
+.product {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 1rem auto;
-  padding: 0 0;
+  padding: 0;
 }
-.productdisplay.block > div {
+.product__card {
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
@@ -30,31 +31,31 @@ main .section.productdisplay-container {
   font-family: 'Geist', sans-serif;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.productdisplay.block > div:hover {
+.product__card:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
 }
-.productdisplay.block > div .product-image-wrapper img {
+.product__image-wrapper img {
   display: block;
   width: 100%;
   height: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
-.productdisplay.block > div .product-details {
+.product__details {
   display: flex;
   flex-direction: column;
   padding: 20px;
   gap: 12px;
   flex-grow: 1;
 }
-.productdisplay.block > div .product-details .product-title {
+.product__title {
   font-size: 1.5rem;
 }
-.productdisplay.block > div .product-details .product-price {
+.product__price {
   color: #000000;
 }
-.productdisplay.block > div .product-details .add-to-cart-button {
+.product__button {
   background: #fafafa;
   color: #000000;
   padding: 10px 20px;
@@ -67,7 +68,7 @@ main .section.productdisplay-container {
   border-radius: 2px;
   margin-top: auto;
 }
-.productdisplay.block > div .product-details .add-to-cart-button:hover {
+.product__button:hover {
   cursor: pointer;
   background: #ccc;
   transform: translateZ(2px);
