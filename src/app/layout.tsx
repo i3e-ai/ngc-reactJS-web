@@ -3,7 +3,6 @@ import "./styles/styles.css"; // Or your main stylesheet file
 
 import Header from "./blocks/header/header";
 import Highlight from "./blocks/highlight/highlight";
-import ScrollLockHandler from "./components/ScrollLockHandler";
 import Footer from "./blocks/footer/footer";
 
 export const metadata: Metadata = {
@@ -22,7 +21,6 @@ export default function RootLayout({
         <Highlight />
         <Header />
         <main>{children}</main>
-        <ScrollLockHandler />
         <Footer/>
       </body>
     </html>

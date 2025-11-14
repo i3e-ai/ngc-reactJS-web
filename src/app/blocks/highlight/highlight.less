@@ -1,28 +1,53 @@
-@import (reference) "../../styles/styles.less";
-// Keyframes for the animation
-@keyframes slide-left {
-  from {
-    transform: translateX(0%);
-  }
+@import (reference) '../../styles/styles.less';
 
-  to {
+// Keyframes for seamless infinite scrolling
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
     transform: translateX(-50%);
   }
 }
 
-.highlight-slides-container,
-.scrolling-wrapper {
+.highlight-slides-container {
   box-sizing: border-box;
   height: 100%;
   background-color: lightgrey;
   overflow: hidden;
+  position: relative;
+
+  // Fade gradients on edges
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &::before {
+    left: 0;
+    background: linear-gradient(90deg, lightgrey 0%, transparent 100%);
+  }
+
+  &::after {
+    right: 0;
+    background: linear-gradient(270deg, lightgrey 0%, transparent 100%);
+  }
 }
 
 .scrolling-wrapper {
+  box-sizing: border-box;
+  height: 100%;
   display: flex;
   align-items: center;
   width: fit-content;
   animation: slide-left 25s linear infinite;
+  will-change: transform;
 }
 
 .highlight-slide {
@@ -30,6 +55,7 @@
   padding: 0 4rem;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 
   > div {
     display: flex;
@@ -50,7 +76,27 @@
 
   // Separator
   &::after {
-    content: "•";
+    content: '•';
     margin-left: 100px;
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .scrolling-wrapper {
+    animation: slide-left 20s linear infinite;
+  }
+
+  .highlight-slide {
+    padding: 0 2rem;
+
+    h2,
+    p {
+      font-size: 11px;
+    }
+
+    &::after {
+      margin-left: 50px;
+    }
   }
 }
