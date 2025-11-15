@@ -28,6 +28,11 @@ class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
+    // Check if this is a Suspense-related error
+    if (error.message.includes('Suspense') || error.message.includes('async')) {
+      console.warn('Suspense boundary issue detected - this might be a React development warning');
+    }
+
     this.setState({ error, errorInfo });
 
     if (this.props.onError) {

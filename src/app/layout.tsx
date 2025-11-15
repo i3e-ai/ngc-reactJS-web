@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./styles/styles.css"; // Or your main stylesheet file
 
 import Header from "./blocks/header/header";
 import Highlight from "./blocks/highlight/highlight";
 import Footer from "./blocks/footer/footer";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import Loading from "./components/Loading/Loading";
 
 export const metadata: Metadata = {
   title: "My NGC Website",
@@ -20,10 +22,18 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ErrorBoundary>
-          <Highlight />
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <Suspense fallback={<Loading message="Loading header..." />}>
+            <Highlight />
+            <Header />
+          </Suspense>
+          <main>
+            <Suspense fallback={<Loading message="Loading content..." fullScreen />}>
+              {children}
+            </Suspense>
+          </main>
+          <Suspense fallback={<Loading message="Loading footer..." />}>
+            <Footer />
+          </Suspense>
         </ErrorBoundary>
       </body>
     </html>

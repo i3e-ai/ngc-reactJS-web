@@ -76,7 +76,7 @@ export default function Header() {
             </div>
           </div>
         </div>
-        <div className="header__navigation">
+        <div className={`header__navigation ${isOpen ? 'is-open' : ''}`}>
           <Navigation isOpen={isOpen} onLinkClick={handleLinkClick} />
         </div>
       </div>
