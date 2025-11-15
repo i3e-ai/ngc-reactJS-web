@@ -9,7 +9,7 @@
 .highlight {
   box-sizing: border-box;
   height: 100%;
-  background-color: #fafafa;
+  background-color: rgba(185, 185, 185, 0.784);
   overflow: hidden;
   position: relative;
 }
