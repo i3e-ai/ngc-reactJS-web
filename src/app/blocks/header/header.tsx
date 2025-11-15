@@ -11,35 +11,18 @@ export default function Header() {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-
     if (!isOpen) {
       document.body.classList.add('no-scroll');
     } else {
       document.body.classList.remove('no-scroll');
     }
+
   }
 
-  useEffect(() => {
-    const setupNavigation = () => {
-      const navigationMenu = document.querySelector('.nav-menu');
-      if (navigationMenu) {
-        const navLinks = document.querySelectorAll('a');
-        navLinks.forEach((link) => {
-          link.addEventListener('click', () => {
-            setIsOpen(false);
-            document.body.classList.remove('no-scroll')
-          });
-        });
-      } else {
-        setTimeout(setupNavigation, 100);
-      }
-    };
-    setupNavigation();
-
-    return () => {
-      document.body.classList.remove('no-scroll');
-    }
-  }, [])
+  const handleLinkClick = () => {
+    setIsOpen(false);
+    document.body.classList.remove('no-scroll');
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -80,23 +63,31 @@ export default function Header() {
   }, [isOpen]);
 
   return (
-    <div ref={headerRef} className="header-wrapper">
-      <div className="header block">
-        <div className="header-content">
-          <div className="nav-hamburger" onClick={toggleMenu}>
-            <button className="hamburger-button"><b>☰</b></button>
+    <header ref={headerRef} className="header">
+      <div className="header__wrapper">
+        <div className="header__content">
+          <div className="header__hamburger" onClick={toggleMenu}>
+            <button className="header__hamburger-button" type="button" aria-label="Toggle navigation menu" aria-expanded={isOpen}>☰</button>
           </div>
-          <div className="title-block">
-            <Image src="/assets/logo.png" alt="logo" width={64} height={56} />
-            <div className="title">
+          <div className="header__brand">
+            <Image
+              src="/assets/logo.png"
+              alt="EDS App Logo"
+              width={64}
+              height={56}
+              priority
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkrHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R7"
+            />
+            <div className="header__title">
               <h1>EDS App</h1>
             </div>
           </div>
         </div>
-        <div className="naviagation-content">
-          <Navigation isOpen={isOpen} />
+        <div className={`header__navigation ${isOpen ? 'is-open' : ''}`}>
+          <Navigation isOpen={isOpen} onLinkClick={handleLinkClick} />
         </div>
       </div>
-    </div>
+    </header>
   );
 }

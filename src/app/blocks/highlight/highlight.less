@@ -1,56 +1,110 @@
-@import "../../styles/styles.less";
-// Keyframes for the animation
-@keyframes slide-left {
-  from {
-    transform: translateX(0%);
-  }
+@import (reference) '../../styles/styles.less';
 
-  to {
+// Keyframes for seamless infinite scrolling
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
     transform: translateX(-50%);
   }
 }
 
-.highlight-slides-container,
-.scrolling-wrapper {
+.highlight {
   box-sizing: border-box;
   height: 100%;
-  background-color: lightgrey;
+  background-color: @background-highlight;
   overflow: hidden;
-}
+  position: relative;
 
-.scrolling-wrapper {
-  display: flex;
-  align-items: center;
-  width: fit-content;
-  animation: slide-left 25s linear infinite;
-}
-
-.highlight-slide {
-  white-space: nowrap;
-  padding: 0 4rem;
-  display: flex;
-  align-items: center;
-
-  > div {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
-
-  h2,
-  p {
-    margin: 0;
-    font-size: 12px;
-    line-height: 1;
-  }
-
-  h2 {
-    font-weight: 700;
-  }
-
-  // Separator
+  // Fade gradients on edges
+  &::before,
   &::after {
-    content: "•";
-    margin-left: 100px;
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &::before {
+    left: 0;
+    background: linear-gradient(
+      90deg,
+      @background-primary 0%,
+      transparent 100%
+    );
+  }
+
+  &::after {
+    right: 0;
+    background: linear-gradient(
+      270deg,
+      @background-primary 0%,
+      transparent 100%
+    );
+  }
+
+  &__wrapper {
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    animation: slide-left 25s linear infinite;
+    will-change: transform;
+  }
+
+  &__slide {
+    white-space: nowrap;
+    padding: 0 4rem;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    > div {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    h2,
+    p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    h2 {
+      font-weight: 700;
+    }
+
+    // Separator
+    &::after {
+      content: '•';
+      margin-left: 100px;
+    }
+  }
+
+  // Mobile responsive
+  @media (max-width: 768px) {
+    &__wrapper {
+      animation: slide-left 20s linear infinite;
+    }
+
+    &__slide {
+      padding: 0 2rem;
+
+      h2,
+      p {
+        font-size: 11px;
+      }
+
+      &::after {
+        margin-left: 50px;
+      }
+    }
   }
 }

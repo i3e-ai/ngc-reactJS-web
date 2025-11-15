@@ -1,14 +1,14 @@
-@import url("../styles/styles.less");
+@import url('../styles/styles.less');
 
 #articles {
   display: flex;
   align-items: center;
-  justify-content:center;
-  padding:10px 0;
+  justify-content: center;
+  padding: 10px 0;
 }
 
-.article.block {
-  .article-item {
+.article {
+  &__item {
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
@@ -18,7 +18,7 @@
     margin-bottom: 3rem;
   }
 
-  .article-image {
+  &__image {
     display: flex;
     justify-content: center;
 
@@ -32,7 +32,7 @@
     }
   }
 
-  .article-text {
+  &__content {
     h1,
     h2 {
       margin-top: 0;
@@ -48,15 +48,14 @@
   }
 }
 
-// --- ADDED: Mobile Breakpoint for Better Readability ---
 @media (width <= 768px) {
-  .article-item {
+  .article__item {
     padding-left: 1rem;
     padding-right: 1rem;
     margin-bottom: 2rem;
   }
 
-  .article-image img {
+  .article__image img {
     height: 200px;
   }
 }

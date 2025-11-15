@@ -1,39 +1,37 @@
-@import url("../styles/styles.less");
-/* Main block container */
-.press-release.block {
+@import (reference) '../styles/styles.less';
+
+.press-release {
   max-width: 960px;
-  margin: 3rem auto;
-  padding: 0 1rem;
-}
+  margin: @space-12 auto;
+  padding: 0 @space-4;
 
-.press-release-item {
-  display: grid;
-  grid-template-columns: 3fr 4fr 1fr;
-  gap: 2rem;
-  align-items: center;
-  padding: 1.5rem 0;
-  border-bottom: 1px solid black;
-}
-
-/* The title of the press release */
-.press-release-button {
-  .button();
-  border: @button-br solid black;
-}
-
-.press-release-button:hover {
-  text-decoration: underline;
-}
-
-/* Responsive styles for mobile devices */
-@media (max-width: 768px) {
-  .press-release-item {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-    padding: 1.5rem 0;
+  &__item {
+    display: grid;
+    grid-template-columns: 3fr 4fr 1fr;
+    gap: @space-8;
+    align-items: center;
+    padding: @space-6 0;
+    border-bottom: 1px solid @background-black;
   }
 
-  .press-release-button {
+  &__button {
+    .button();
+    border: @button-br solid @background-black;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .press-release__item {
+    grid-template-columns: 1fr;
+    gap: @space-2;
+    padding: @space-6 0;
+  }
+
+  .press-release__button {
     justify-self: start;
   }
 }

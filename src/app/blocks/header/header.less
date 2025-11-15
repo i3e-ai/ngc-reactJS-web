@@ -1,15 +1,18 @@
-@import url("../../styles/styles.less");
+@import (reference) '../../styles/styles.less';
 
-// 1. BASE HEADER STYLES (Applies to all screen sizes)
-
-.header-wrapper {
+// Header Block
+.header {
   position: relative;
   z-index: 100;
   background: @background-primary;
-}
 
-.header.block {
-  .header-content {
+  // Header wrapper container
+  &__wrapper {
+    background: @background-primary;
+  }
+
+  // Header content
+  &__content {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,36 +22,60 @@
     height: 70px;
   }
 
-  .title-block {
+  // Brand section (logo + title)
+  &__brand {
     display: flex;
     align-items: center;
     gap: @space-4;
     padding: 16px;
-    .title h1 {
-      color: black;
+
+    h1 {
+      color: @text-primary;
       font-size: @text-3xl;
       margin: 0;
     }
   }
 
-  .nav-hamburger {
-    display: none; // Hidden by default
+  // Title section
+  &__title {
+    h1 {
+      color: @text-primary;
+      font-size: @text-3xl;
+      margin: 0;
+    }
+  }
+
+  // Hamburger menu
+  &__hamburger {
+    position: absolute;
+    left: @space-2;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    z-index: 1001;
+  }
+
+  &__hamburger-button {
+    padding: 8px;
     cursor: pointer;
     background: none;
     border: none;
-    color: black;
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px;
-    z-index: 1000;
+    font-size: xx-large;
+  }
+
+  // Navigation container
+  &__navigation {
+    width: 100%;
   }
 }
 
-// 2. DESKTOP NAVIGATION STYLES
+// Desktop styles
 @media (min-width: 769px) {
-  .nav-sections {
+  .header {
+    &__hamburger {
+      display: none !important;
+    }
+
     .nav-menu {
       display: flex;
       list-style: none;
@@ -57,11 +84,12 @@
       gap: @space-4;
 
       .has-dropdown a {
-        color: black;
+        color: @text-primary;
         text-decoration: none;
         padding: 10px 15px;
         border-radius: @card-br;
         transition: color 0.3s ease;
+
         &:hover {
           color: @text-hover-transition;
         }
@@ -70,58 +98,53 @@
   }
 }
 
-
-// 3. MOBILE NAVIGATION STYLES (This is the corrected section)
+// Mobile styles
 @media (max-width: 768px) {
-  // Show the hamburger on mobile
-  .header.block .nav-hamburger {
-    display: block;
-  }
+  .header {
+    &__hamburger {
+      display: block;
+      z-index: 1001;
+    }
 
-  // By default, the mobile nav is hidden
-  .nav-sections {
-    display: none;
-  }
+    &__navigation {
+      display: none;
 
-  // When OPEN, the nav becomes a full-screen overlay
-  .nav-sections.is-open {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; // Cover the full screen
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: @background-primary; // Dark background
-    padding: 80px 20px 20px; // Add top padding to not overlap header content
-    z-index: 999;
-    overflow-y: auto;
-  }
+      &.is-open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: @background-primary;
+        padding: 100px 40px 40px;
+        z-index: 1000;
+        overflow-y: auto;
+      }
+    }
 
-  // Style the menu list inside the overlay
-  .nav-sections.is-open .nav-menu {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    gap: 0;
-  }
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      gap: 0;
 
-  // Style the individual links for mobile
-  .nav-sections.is-open .nav-menu > li > a {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-    display: block;
-    padding: 20px 10px;
-    border-bottom: 1px solid #444;
-  }
+      > li > a {
+        color: @text-primary;
+        font-size: 24px;
+        font-weight: bold;
+        text-decoration: none;
+        display: block;
+        padding: 20px 10px;
+      }
+    }
 
-  // Ensure the complex desktop dropdowns are ALWAYS hidden on mobile
-  .nav-sections .dropdown-content {
-    display: none !important;
+    .dropdown-content {
+      display: none !important;
+    }
   }
 }

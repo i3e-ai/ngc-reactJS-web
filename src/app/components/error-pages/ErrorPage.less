@@ -1,0 +1,56 @@
+@import (reference) '../../styles/styles.less';
+
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: @space-8;
+  background: @background-white;
+  text-align: center;
+
+  &__component {
+    margin-bottom: @space-8;
+
+    h1 {
+      color: @text-primary;
+      font-family: @font-primary;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: @space-4;
+      font-weight: 600;
+    }
+
+    p {
+      color: @text-secondary;
+      font-family: @font-primary;
+      font-size: @text-base;
+      line-height: 1.5;
+      max-width: 500px;
+      margin: 0;
+    }
+  }
+
+  &__redirect {
+    display: flex;
+    gap: @space-4;
+    flex-wrap: wrap;
+
+    button {
+      padding: @space-2 @space-6;
+      background: @background-cards;
+      color: @text-navlink;
+      border: none;
+      border-radius: @button-br;
+      font-family: @font-primary;
+      font-size: @text-sm;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: @text-navlink;
+        color: @background-white;
+      }
+    }
+  }
+}

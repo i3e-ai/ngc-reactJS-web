@@ -43,16 +43,13 @@ const ProductDisplay: React.FC = () => {
   };
 
   return (
-    // FIX 1: This is the main container that needs both classes.
-    <div className="productdisplay block">
+    <div className="product">
       {productsData.map((product) => {
         const productId = generateProductId(product.title);
 
         return (
-          // This `div` is the card targeted by `.productdisplay.block > div`
-          <div key={productId}>
-            {/* FIX 2: Corrected class name here */}
-            <div className="product-image-wrapper">
+          <div key={productId} className="product__card">
+            <div className="product__image-wrapper">
               <Image
                 src={product.image}
                 alt={product.title}
@@ -61,12 +58,11 @@ const ProductDisplay: React.FC = () => {
                 style={{ objectFit: 'cover', width: '100%', height: 'auto' }}
               />
             </div>
-            {/* These class names correctly match your CSS */}
-            <div className="product-details">
-              <h2 className="product-title">{product.title}</h2>
-              <h3 className="product-price">{product.price}</h3>
+            <div className="product__details">
+              <h2 className="product__title">{product.title}</h2>
+              <h3 className="product__price">{product.price}</h3>
               <button
-                className="add-to-cart-button"
+                className="product__button"
                 onClick={() => onAddToCartClick(productId)}
               >
                 Add to Cart

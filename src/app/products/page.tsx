@@ -52,7 +52,7 @@ const ProductPage: React.FC = () => {
           // This `div` is the card targeted by `.productdisplay.block > div`
           <div key={productId}>
             {/* FIX 2: Corrected class name here */}
-            <div className="product-image-wrapper">
+            <figure className="product-image-wrapper">
               <Image
                 src={product.image}
                 alt={product.title}
@@ -60,7 +60,7 @@ const ProductPage: React.FC = () => {
                 height={500}
                 style={{ objectFit: 'cover', width: '100%', height: 'auto' }}
               />
-            </div>
+            </figure>
             {/* These class names correctly match your CSS */}
             <div className="product-details">
               <h2 className="product-title">{product.title}</h2>

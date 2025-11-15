@@ -9,11 +9,11 @@ interface BlogHeroProps {
 const BlogHero: React.FC<BlogHeroProps> = ({ imageUrl, contentHTML }) => {
   return (
     <section
-      className="blog-hero block"
+      className="blog-hero"
       style={{ backgroundImage: `url(${imageUrl})` }}
     >
-      <div
-        className="hero-content"
+      <header
+        className="blog-hero__content"
         dangerouslySetInnerHTML={{ __html: contentHTML }}
       />
     </section>

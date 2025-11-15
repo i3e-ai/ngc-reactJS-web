@@ -56,14 +56,14 @@
 }
 @font-face {
   font-family: Geist;
-  src: url("/fonts/Geist-Regular.woff2") format("woff2");
+  src: url('/fonts/Geist-Regular.woff2') format('woff2');
   font-weight: 400;
   /* Regular */
   font-style: normal;
 }
 @font-face {
   font-family: Geist;
-  src: url("/fonts/Geist-Bold.woff2") format("woff2");
+  src: url('/fonts/Geist-Bold.woff2') format('woff2');
   font-weight: 700;
   /* Bold */
   font-style: normal;
@@ -79,7 +79,7 @@ html {
   padding: 0;
 }
 body {
-  font-family: "Sora", sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1rem;
   line-height: 1.5;
   color: #000000;
@@ -96,7 +96,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Geist", sans-serif;
+  font-family: 'Geist', sans-serif;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -205,7 +205,7 @@ html {
   justify-content: center;
   padding: 10px 0;
 }
-.article.block .article-item {
+.article__item {
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
@@ -214,11 +214,11 @@ html {
   gap: 1.5rem;
   margin-bottom: 3rem;
 }
-.article.block .article-image {
+.article__image {
   display: flex;
   justify-content: center;
 }
-.article.block .article-image img {
+.article__image img {
   max-width: 100%;
   width: auto;
   height: 300px;
@@ -226,24 +226,24 @@ html {
   border-radius: 2px;
   border: 1px solid #ddd;
 }
-.article.block .article-text h1,
-.article.block .article-text h2 {
+.article__content h1,
+.article__content h2 {
   margin-top: 0;
   margin-bottom: 1rem;
   font-size: 2.5rem;
 }
-.article.block .article-text p,
-.article.block .article-text ul {
+.article__content p,
+.article__content ul {
   margin-bottom: 1rem;
   line-height: 1.6;
 }
 @media (width <= 768px) {
-  .article-item {
+  .article__item {
     padding-left: 1rem;
     padding-right: 1rem;
     margin-bottom: 2rem;
   }
-  .article-image img {
+  .article__image img {
     height: 200px;
   }
 }

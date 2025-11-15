@@ -1,0 +1,100 @@
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: #fafafa;
+}
+.error-boundary__container {
+  max-width: 500px;
+  text-align: center;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.error-boundary__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+.error-boundary__title {
+  font-size: 1.5rem;
+  color: #000000;
+  margin-bottom: 1rem;
+  font-family: 'Geist', sans-serif;
+}
+.error-boundary__message {
+  color: #636363;
+  margin-bottom: 1.5rem;
+  font-family: 'Sora', sans-serif;
+}
+.error-boundary__details {
+  text-align: left;
+  margin-bottom: 1.5rem;
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
+}
+.error-boundary__details summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 0.5rem;
+}
+.error-boundary__stack {
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #dc2626;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.error-boundary__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+.error-boundary__button {
+  background: #fafafa;
+  color: #000000;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+  transition: all 0.3s;
+  border-radius: 2px;
+}
+.error-boundary__button:hover {
+  cursor: pointer;
+  background: #ccc;
+  transform: translateZ(2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+}
+.error-boundary__button--primary {
+  background: #0071e3;
+  color: #ffffff;
+}
+.error-boundary__button--primary:hover {
+  background: #0051ba;
+}
+.error-boundary__button--secondary {
+  background: transparent;
+  color: #636363;
+  border: 1px solid #8c92ac;
+}
+.error-boundary__button--secondary:hover {
+  background: #f5f5f5;
+}
+@media (max-width: 768px) {
+  .error-boundary {
+    padding: 1rem;
+  }
+  .error-boundary__container {
+    padding: 1.5rem;
+  }
+  .error-boundary__actions {
+    flex-direction: column;
+  }
+}
