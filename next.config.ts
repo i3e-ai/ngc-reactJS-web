@@ -2,6 +2,12 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+
+  // Turbopack configuration
+  turbopack: {
+    root: __dirname, // Set the correct workspace root
+  },
+
   sassOptions: {
     includePaths: ['./src'],
     prependData: `@import "./src/app/styles/styles.less"`,

@@ -1,12 +1,6 @@
 import React from 'react';
 import "./quote.css"
 
-interface QuoteProps {
-  author: string;
-  quote: string;
-  title: string;
-}
-
 const quotesData = [
   {
     author: "John Doe",
