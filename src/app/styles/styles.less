@@ -1,26 +1,12 @@
-// --- Font Imports & Declarations ---
-
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap'); // Sora font
-
-@font-face {
-  font-family: Geist;
-  src: url('/fonts/Geist-Regular.woff2') format('woff2');
-  font-weight: 400; /* Regular */
-  font-style: normal;
-}
-
-@font-face {
-  font-family: Geist;
-  src: url('/fonts/Geist-Bold.woff2') format('woff2');
-  font-weight: 700; /* Bold */
-  font-style: normal;
-}
+// --- Optimized Font Variables ---
+// Fonts are now optimized via Next.js font loading in layout.tsx
+// Using CSS custom properties for better performance and security
 
 // --- Variable Definitions ---
 
-// Fonts
-@font-primary: 'Sora', sans-serif;
-@font-secondary: 'Geist', sans-serif;
+// Fonts (using Next.js optimized variables)
+@font-primary: var(--font-sora), sans-serif;
+@font-secondary: var(--font-geist), sans-serif;
 
 // Colors
 @text-primary: #000000;
