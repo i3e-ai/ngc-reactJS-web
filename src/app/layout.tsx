@@ -4,6 +4,7 @@ import "./styles/styles.css"; // Or your main stylesheet file
 import Header from "./blocks/header/header";
 import Highlight from "./blocks/highlight/highlight";
 import Footer from "./blocks/footer/footer";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 export const metadata: Metadata = {
   title: "My NGC Website",
@@ -18,10 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Highlight />
-        <Header />
-        <main>{children}</main>
-        <Footer/>
+        <ErrorBoundary>
+          <Highlight />
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </ErrorBoundary>
       </body>
     </html>
   );
