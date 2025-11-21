@@ -1,34 +1,38 @@
-import { title } from "process";
+import { title } from 'process';
 
-interface Badge{
+export interface Badge {
   type: 'new' | 'sold' | 'on-sale' | 'limited' | 'best-seller';
   label: string;
   color: string;
 }
 
-interface Product{
+export interface Product {
   id: string;
   image: string;
   badges: Badge[];
+  category: string;
   sales_category_title: string;
   sku: string;
   price: number;
   originalPrice?: number;
   quantity: number;
   inStock: boolean;
+  description: string;
+  rating?: number;
   featured?: boolean;
 }
 
-interface PromoBlock{
+export interface PromoBlock {
   id: string;
   title: string;
+  description: string;
   image: string;
   ctaText: string;
   ctaLink: string;
-  position: number;
+  position?: number;
 }
 
-export interface ProductFilters{
+export interface ProductFilters {
   category?: string;
   minPrice?: number;
   maxPrice?: number;
@@ -36,7 +40,7 @@ export interface ProductFilters{
   searchQuery?: string;
 }
 
-export interface PaginationInfo{
+export interface PaginationInfo {
   currentPage: number;
   totalPages: number;
   totalItems: number;
@@ -46,7 +50,7 @@ export interface PaginationInfo{
 }
 
 //API Response Types wraps all api responses with consistent structure
-export interface ApiResponse<T>{
+export interface ApiResponse<T> {
   data: T | null;
   success: boolean;
   message?: string;
@@ -54,7 +58,7 @@ export interface ApiResponse<T>{
 }
 
 //ProductListingState manages the entire component state
-export interface ProductListingState{
+export interface ProductListingState {
   products: Product[];
   loading: boolean;
   error: string | null;
@@ -65,18 +69,18 @@ export interface ProductListingState{
   filter: ProductFilters;
 }
 
-export interface ProductCardProps{
+export interface ProductCardProps {
   product: Product;
   quantity: number;
-  onQuantityChange: (id: string,  qty: number)=>void;
-  onAddToCart: (product: Product)=>void;
+  onQuantityChange: (id: string, qty: number) => void;
+  onAddToCart: (product: Product) => void;
 }
 
-export interface PromoBlockProps{
+export interface PromoBlockProps {
   promo: PromoBlock;
 }
 
 //Loading skeletion
-export interface ShimmerCardProps{
+export interface ShimmerCardProps {
   count?: number;
 }
