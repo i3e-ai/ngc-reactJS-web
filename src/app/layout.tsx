@@ -68,6 +68,7 @@ export default function RootLayout({
             <Suspense fallback={<Loading message="Loading content..." fullScreen />}>
               {children}
             </Suspense>
+
           </main>
           <Suspense fallback={<Loading message="Loading footer..." />}>
             <Footer />

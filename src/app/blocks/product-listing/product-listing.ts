@@ -65,7 +65,7 @@ export interface ProductListingState {
   currentPage: number;
   hasMore: boolean;
   totalProducts: number;
-  selectedQuantites: Record<string, number>;
+  selectedQuantities: Record<string, number>;
   filter: ProductFilters;
 }
 

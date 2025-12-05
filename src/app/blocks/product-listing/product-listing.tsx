@@ -1,12 +1,409 @@
-import { useState } from "react"
-import type{
+'use client';
+import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import { productService } from './service/productService';
+import type {
   Product,
   PromoBlock,
   ProductListingState,
   ProductCardProps,
   PromoBlockProps,
   ShimmerCardProps
-}from './product-listing'
-const ProductListng: React.FC = ()=>{
-  const [state, setState] = useState<ProductListingState>
-}
+} from './product-listing';
+import './product-listing.css';
+
+const ProductListing: React.FC = () => {
+  //Single state object contains all component state
+
+  const [state, setState] = useState<ProductListingState>({
+    products: [],
+    loading: false,
+    error: null,
+    currentPage: 0,
+    hasMore: true,
+    totalProducts: 0,
+    selectedQuantities: {},
+    filter: {}
+  });
+
+  // API INTEGRATION
+  const loadMoreProducts = useCallback(async (resetProducts = false) => {
+    // Prevent duplicate requests
+    if (state.loading) {
+      console.log('⏸️ Already loading, skipping request');
+      return;
+    }
+
+    console.log('🔄 Loading more products...');
+    setState(prev => ({ ...prev, loading: true, error: null }));
+
+    try {
+      // Calculate next page number
+      const nextPage = resetProducts ? 1 : state.currentPage + 1;
+
+      console.log(`📄 Fetching page ${nextPage}`);
+
+      // Fetch from API
+      const response = await productService.fetchProducts(
+        nextPage,
+        8, // Load 8 products at a time
+        state.filter
+      );
+
+      if (response.success && response.data) {
+        console.log(`✅ Received ${response.data.products.length} products`);
+
+        // Determine if we should inject a promo block
+        // Inject after every 2 pages (16 products)
+        const shouldInjectPromo = nextPage % 2 === 0 && response.data.promos.length > 0;
+
+        // Build new products array
+        const newProducts = resetProducts
+          ? response.data.products
+          : [...state.products, ...response.data.products];
+
+        // Inject promo block if needed
+        if (shouldInjectPromo) {
+          const promoIndex = Math.floor(nextPage / 2) - 1;
+          const promo = response.data.promos[promoIndex % response.data.promos.length];
+
+          // Create truly unique ID using timestamp to avoid any collision
+          const uniquePromoId = `promo-${nextPage}-${Date.now()}`;
+
+          // Add promo as a special "product" with type marker and unique ID
+          newProducts.push({
+            ...promo,
+            id: uniquePromoId,
+            type: 'promo'
+          } as Product & PromoBlock & { type: 'promo' });
+
+          console.log(`Injected promo block with ID: ${uniquePromoId}`);
+        }
+
+        // Update state
+        setState(prev => ({
+          ...prev,
+          products: newProducts,
+          currentPage: nextPage,
+          hasMore: response.pagination?.hasNext || false,
+          totalProducts: response.pagination?.totalItems || 0,
+          loading: false
+        }));
+      } else {
+        // Handle API error
+        console.error('API returned error:', response.message);
+        setState(prev => ({
+          ...prev,
+          loading: false,
+          error: response.message || 'Failed to load products'
+        }));
+      }
+    } catch (error) {
+      // Handle network error
+      console.error('Network error:', error);
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        error: error instanceof Error ? error.message : 'Network error occurred'
+      }));
+    }
+  }, [state.currentPage, state.loading, state.filter, state.products]);
+
+
+  /**
+   * Event Handlers
+   * Handle quantity change for a product
+   * Updates the selectedQuantities map in state
+   */
+  const handleQuantityChange = useCallback((productId: string, quantity: number) => {
+    setState(prev => ({
+      ...prev,
+      selectedQuantities: {
+        ...prev.selectedQuantities,
+        [productId]: Math.max(1, quantity) // Minimum quantity is 1
+      }
+    }));
+  }, []);
+
+  /**
+   * Handle add to cart button click
+   */
+  const handleAddToCart = useCallback((product: Product) => {
+    const quantity = state.selectedQuantities[product.id] || 1;
+
+    console.log(`🛒 Adding to cart:`, {
+      product: product.sales_category_title,
+      quantity,
+      price: product.price,
+      total: product.price * quantity
+    });
+
+    // In production, you would call:
+    // cartService.addItem(product, quantity);
+    // showToast(`Added ${quantity}x ${product.sales_category_title} to cart`);
+  }, [state.selectedQuantities]);
+
+  /**
+   * Retry loading after error
+   * Resets state and tries again from page 1
+   */
+  const handleRetry = useCallback(() => {
+    console.log('🔄 Retrying...');
+    setState(prev => ({
+      ...prev,
+      currentPage: 0,
+      error: null
+    }));
+    loadMoreProducts(true);
+  }, [loadMoreProducts]);
+
+  /**
+   * Load initial products on component mount
+   * Empty dependency array ensures this runs only once
+   */
+  useEffect(() => {
+    console.log('🚀 Component mounted, loading initial products');
+    loadMoreProducts(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Intentionally empty - only run on mount
+
+  /**
+   * Determine if an item is a promo block
+   * Promo blocks are injected as special products with type='promo'
+   */
+  const isPromoBlock = (item: Product | (PromoBlock & { type: 'promo' })): item is PromoBlock & { type: 'promo' } => {
+    return 'type' in item && item.type === 'promo';
+  };
+
+  return (
+    <div className="product-listing">
+      {/* ===== FILTER PANEL ===== */}
+      <aside className="product-listing__filters">
+        <div className="filter-group">
+          <h4>Category</h4>
+          <div className="filter-option">
+            <input type="radio" id="all" name="category" defaultChecked />
+            <label htmlFor="all">All Products</label>
+          </div>
+          <div className="filter-option">
+            <input type="radio" id="electronics" name="category" />
+            <label htmlFor="electronics">Electronics</label>
+          </div>
+          <div className="filter-option">
+            <input type="radio" id="clothing" name="category" />
+            <label htmlFor="clothing">Clothing</label>
+          </div>
+        </div>
+
+        <div className="filter-group">
+          <h4>Price Range</h4>
+          <input
+            type="range"
+            className="price-slider"
+            min="0"
+            max="1000"
+            defaultValue="500"
+          />
+          <div className="price-range-label">
+            <span>$0</span>
+            <span>$1000</span>
+          </div>
+        </div>
+
+        <div className="filter-group">
+          <h4>Availability</h4>
+          <div className="filter-option">
+            <input type="checkbox" id="in-stock" />
+            <label htmlFor="in-stock">In Stock Only</label>
+          </div>
+        </div>
+      </aside>
+
+      {/* ===== MAIN CONTENT ===== */}
+      <main className="product-listing__main">
+        {/* Error State */}
+        {state.error && (
+          <div className="product-listing__error">
+            <p><strong>Error:</strong> {state.error}</p>
+            <button onClick={handleRetry}>Retry</button>
+          </div>
+        )}
+
+        {/* Product Grid */}
+        <div className="product-listing__grid">
+          {/* Render products and promo blocks */}
+          {state.products.map((item) =>
+            isPromoBlock(item) ? (
+              <PromoBlockComponent key={item.id} promo={item} />
+            ) : (
+              <ProductCard
+                key={item.id}
+                product={item}
+                quantity={state.selectedQuantities[item.id] || 1}
+                onQuantityChange={handleQuantityChange}
+                onAddToCart={handleAddToCart}
+              />
+            )
+          )}
+
+          {/* Shimmer Loading Cards */}
+          {state.loading && (
+            <ShimmerCards count={8} />
+          )}
+        </div>
+
+        {/* Load More Button */}
+        {state.hasMore && !state.loading && !state.error && (
+          <div className="product-listing__load-more">
+            <button
+              onClick={() => loadMoreProducts(false)}
+              className="load-more-button"
+            >
+              Load More Products
+              {state.totalProducts > state.products.length && (
+                <> ({state.totalProducts - state.products.length} remaining)</>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* End of Results */}
+        {!state.hasMore && state.products.length > 0 && !state.loading && (
+          <div className="product-listing__end">
+            <p>You&apos;ve viewed all {state.totalProducts} products</p>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!state.loading && state.products.length === 0 && !state.error && (
+          <div className="product-listing__end">
+            <p>No products found</p>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+};
+
+
+/**
+ * SubComponents
+ * ProductCard Component
+ * Renders a single product card with image, badges, price, and controls
+ */
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  quantity,
+  onQuantityChange,
+  onAddToCart
+}) => {
+  return (
+    <article className="product-card">
+      {/* Product Image */}
+      <div className="product-card__image">
+        <Image src={product.image} alt={product.sales_category_title} width={400} height={300} loading="lazy" />
+
+        {/* Badges */}
+        {product.badges.length > 0 && (
+          <div className="product-card__badges">
+            {product.badges.map((badge, index) => (
+              <span
+                key={index}
+                className={`product-card__badge product-card__badge--${badge.type}`}
+                style={{ backgroundColor: badge.color }}
+              >
+                {badge.label}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Card Body */}
+      <div className="product-card__body">
+        <p className="product-card__category">{product.category}</p>
+        <h3 className="product-card__title">{product.sales_category_title}</h3>
+        <p className="product-card__sku">SKU: {product.sku}</p>
+
+        <div className="product-card__price-wrapper">
+          <span className={`product-card__price ${product.originalPrice ? 'product-card__price--has-discount' : ''}`}>
+            ${product.price.toFixed(2)}
+          </span>
+          {product.originalPrice && (
+            <span className="product-card__original-price">
+              ${product.originalPrice.toFixed(2)}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Card Footer */}
+      <div className="product-card__footer">
+        <input
+          type="number"
+          min="1"
+          value={quantity}
+          onChange={(e) => onQuantityChange(product.id, parseInt(e.target.value) || 1)}
+          className="product-card__quantity"
+          aria-label="Quantity"
+        />
+        <button
+          onClick={() => onAddToCart(product)}
+          className="product-card__add-to-cart"
+          disabled={!product.inStock}
+        >
+          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+        </button>
+      </div>
+    </article>
+  );
+};
+
+/**
+ * PromoBlock Component
+ * Renders promotional banner that spans 2 grid columns
+ */
+const PromoBlockComponent: React.FC<PromoBlockProps> = ({ promo }) => {
+  return (
+    <div className="promo-block">
+      {promo.image && (
+        <Image src={promo.image} alt={promo.title} width={600} height={300} className="promo-block__image" />
+      )}
+      <h2 className="promo-block__title">{promo.title}</h2>
+      <p className="promo-block__description">{promo.description}</p>
+      <a href={promo.ctaLink}>
+        <button className="promo-block__cta">{promo.ctaText}</button>
+      </a>
+    </div>
+  );
+};
+
+/**
+ * ShimmerCards Component
+ * Renders loading skeleton cards with shimmer animation
+ */
+const ShimmerCards: React.FC<ShimmerCardProps> = ({ count = 8 }) => {
+  return (
+    <>
+      {Array.from({ length: count }, (_, index) => (
+        <div key={`shimmer-${index}`} className="shimmer-card">
+          <div className="shimmer-card__image shimmer-box"></div>
+          <div className="shimmer-card__body">
+            <div className="shimmer-text-sm shimmer-box"></div>
+            <div className="shimmer-text-md shimmer-box"></div>
+            <div className="shimmer-text-sm shimmer-box"></div>
+            <div className="shimmer-text-lg shimmer-box"></div>
+          </div>
+          <div className="shimmer-card__footer">
+            <div className="shimmer-input shimmer-box"></div>
+            <div className="shimmer-button shimmer-box"></div>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
+// Export the component
+export { ProductListing };
+export default ProductListing;
