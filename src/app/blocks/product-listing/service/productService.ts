@@ -128,8 +128,8 @@ class ProductService {
       // Build API URL with query parameters
       let url = `${API_CONFIG.BASE_URL}/products?limit=${limit}&skip=${skip}`;
 
-      // Apply category filter if provided
-      if (filters?.category) {
+      // Apply category filter if provided (skip if 'all')
+      if (filters?.category && filters.category !== 'all') {
         url = `${API_CONFIG.BASE_URL}/products/category/${filters.category}?limit=${limit}&skip=${skip}`;
       }
 
@@ -234,7 +234,7 @@ class ProductService {
         title: 'Black Friday Sale',
         description: 'Up to 50% off on selected items',
         image:
-          'https://via.placeholder.com/600x300/FF5722/ffffff?text=Black+Friday+Sale',
+          'https://placehold.co/600x300/FF5722/ffffff?text=Black+Friday+Sale',
         ctaText: 'Shop Now',
         ctaLink: '/sale',
       },

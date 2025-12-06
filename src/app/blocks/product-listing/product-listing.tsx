@@ -26,22 +26,24 @@ const ProductListing: React.FC = () => {
     filter: {}
   });
 
+  const [addedToCart, setAddedToCart] = useState<string | null>(null);
+
   // API INTEGRATION
   const loadMoreProducts = useCallback(async (resetProducts = false) => {
     // Prevent duplicate requests
     if (state.loading) {
-      console.log('⏸️ Already loading, skipping request');
+      console.log('Already loading, skipping request');
       return;
     }
 
-    console.log('🔄 Loading more products...');
+    console.log('Loading more products...');
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
       // Calculate next page number
       const nextPage = resetProducts ? 1 : state.currentPage + 1;
 
-      console.log(`📄 Fetching page ${nextPage}`);
+      console.log(`Fetching page ${nextPage}`);
 
       // Fetch from API
       const response = await productService.fetchProducts(
@@ -51,7 +53,7 @@ const ProductListing: React.FC = () => {
       );
 
       if (response.success && response.data) {
-        console.log(`✅ Received ${response.data.products.length} products`);
+        console.log(` Received ${response.data.products.length} products`);
 
         // Determine if we should inject a promo block
         // Inject after every 2 pages (16 products)
@@ -138,15 +140,15 @@ const ProductListing: React.FC = () => {
       total: product.price * quantity
     });
 
+    setAddedToCart(product.id);
+    setTimeout(() => setAddedToCart(null), 2000);
     // In production, you would call:
     // cartService.addItem(product, quantity);
-    // showToast(`Added ${quantity}x ${product.sales_category_title} to cart`);
+    alert(`✅ Added ${quantity}x ${product.sales_category_title} to cart!\n\nPrice: $${product.price.toFixed(2)}\nTotal: $${(product.price * quantity).toFixed(2)}`);
+
   }, [state.selectedQuantities]);
 
-  /**
-   * Retry loading after error
-   * Resets state and tries again from page 1
-   */
+  /** Retry loading after error Resets state and tries again from page 1 */
   const handleRetry = useCallback(() => {
     console.log('🔄 Retrying...');
     setState(prev => ({
@@ -157,15 +159,97 @@ const ProductListing: React.FC = () => {
     loadMoreProducts(true);
   }, [loadMoreProducts]);
 
-  /**
-   * Load initial products on component mount
-   * Empty dependency array ensures this runs only once
-   */
+  /*Load initial products on component mount */
   useEffect(() => {
     console.log('🚀 Component mounted, loading initial products');
     loadMoreProducts(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Intentionally empty - only run on mount
+
+  //Handle Filter Changes
+  const handleCategoryChange = useCallback((category: string) => {
+    console.log(`Filter Changed : ${category}`);
+    setState(prev => {
+      const newState = {
+        ...prev,
+        filter: { ...prev.filter, category },
+        products: [],
+        currentPage: 0,
+        loading: true
+      };
+      // Reload Products with new filters using updated state
+      setTimeout(() => {
+        productService.fetchProducts(1, 8, newState.filter).then(response => {
+          if (response.success && response.data) {
+            setState(current => ({
+              ...current,
+              products: response.data!.products,
+              currentPage: 1,
+              hasMore: response.pagination?.hasNext || false,
+              totalProducts: response.pagination?.totalItems || 0,
+              loading: false
+            }));
+          }
+        });
+      }, 0);
+      return newState;
+    });
+  }, []);
+
+  const handlePriceChange = useCallback((maxPrice: number) => {
+    setState(prev => {
+      const newState = {
+        ...prev,
+        filter: { ...prev.filter, maxPrice },
+        products: [],
+        currentPage: 0,
+        loading: true
+      };
+      setTimeout(() => {
+        productService.fetchProducts(1, 8, newState.filter).then(response => {
+          if (response.success && response.data) {
+            setState(current => ({
+              ...current,
+              products: response.data!.products,
+              currentPage: 1,
+              hasMore: response.pagination?.hasNext || false,
+              totalProducts: response.pagination?.totalItems || 0,
+              loading: false
+            }));
+          }
+        });
+      }, 0);
+      return newState;
+    });
+  }, []);
+
+  const handleStockFilter = useCallback((inStockOnly: boolean) => {
+    setState(prev => {
+      const newState = {
+        ...prev,
+        filter: { ...prev.filter, inStockOnly },
+        products: [],
+        currentPage: 0,
+        loading: true
+      };
+      setTimeout(() => {
+        productService.fetchProducts(1, 8, newState.filter).then(response => {
+          if (response.success && response.data) {
+            setState(current => ({
+              ...current,
+              products: response.data!.products,
+              currentPage: 1,
+              hasMore: response.pagination?.hasNext || false,
+              totalProducts: response.pagination?.totalItems || 0,
+              loading: false
+            }));
+          }
+        });
+      }, 0);
+      return newState;
+    });
+  }, []);
+
 
   /**
    * Determine if an item is a promo block
@@ -182,27 +266,56 @@ const ProductListing: React.FC = () => {
         <div className="filter-group">
           <h4>Category</h4>
           <div className="filter-option">
-            <input type="radio" id="all" name="category" defaultChecked />
+            <input
+              type="radio"
+              id="all"
+              name="category"
+              checked={!state.filter.category || state.filter.category === 'all'}
+              onChange={() => handleCategoryChange('all')}
+            />
             <label htmlFor="all">All Products</label>
           </div>
           <div className="filter-option">
-            <input type="radio" id="electronics" name="category" />
-            <label htmlFor="electronics">Electronics</label>
+            <input
+              type="radio"
+              id="beauty"
+              name="category"
+              checked={state.filter.category === 'beauty'}
+              onChange={() => handleCategoryChange('beauty')}
+            />
+            <label htmlFor="beauty">Beauty</label>
           </div>
           <div className="filter-option">
-            <input type="radio" id="clothing" name="category" />
-            <label htmlFor="clothing">Clothing</label>
+            <input
+              type="radio"
+              id="fragrances"
+              name="category"
+              checked={state.filter.category === 'fragrances'}
+              onChange={() => handleCategoryChange('fragrances')}
+            />
+            <label htmlFor="fragrances">Fragrances</label>
+          </div>
+          <div className="filter-option">
+            <input
+              type="radio"
+              id="furniture"
+              name="category"
+              checked={state.filter.category === 'furniture'}
+              onChange={() => handleCategoryChange('furniture')}
+            />
+            <label htmlFor="furniture">Furniture</label>
           </div>
         </div>
 
         <div className="filter-group">
-          <h4>Price Range</h4>
+          <h4>Price Range: ${state.filter.maxPrice || 1000}</h4>
           <input
             type="range"
             className="price-slider"
             min="0"
             max="1000"
-            defaultValue="500"
+            defaultValue="1000"
+            onChange={(e) => handlePriceChange(parseInt(e.target.value))}
           />
           <div className="price-range-label">
             <span>$0</span>
@@ -213,7 +326,11 @@ const ProductListing: React.FC = () => {
         <div className="filter-group">
           <h4>Availability</h4>
           <div className="filter-option">
-            <input type="checkbox" id="in-stock" />
+            <input
+              type="checkbox"
+              id="in-stock"
+              onChange={(e) => handleStockFilter(e.target.checked)}
+            />
             <label htmlFor="in-stock">In Stock Only</label>
           </div>
         </div>
@@ -242,6 +359,7 @@ const ProductListing: React.FC = () => {
                 quantity={state.selectedQuantities[item.id] || 1}
                 onQuantityChange={handleQuantityChange}
                 onAddToCart={handleAddToCart}
+                isAddedToCart={addedToCart === item.id}
               />
             )
           )}
@@ -295,7 +413,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   product,
   quantity,
   onQuantityChange,
-  onAddToCart
+  onAddToCart,
+  isAddedToCart
 }) => {
   return (
     <article className="product-card">
@@ -349,10 +468,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         />
         <button
           onClick={() => onAddToCart(product)}
-          className="product-card__add-to-cart"
+          className={`product-card__add-to-cart ${isAddedToCart ? 'product-card__add-to-cart--added' : ''}`}
           disabled={!product.inStock}
         >
-          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+          {isAddedToCart ? '✓ Added!' : product.inStock ? 'Add to Cart' : 'Out of Stock'}
         </button>
       </div>
     </article>

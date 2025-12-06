@@ -74,6 +74,7 @@ export interface ProductCardProps {
   quantity: number;
   onQuantityChange: (id: string, qty: number) => void;
   onAddToCart: (product: Product) => void;
+  isAddedToCart?: boolean;
 }
 
 export interface PromoBlockProps {
