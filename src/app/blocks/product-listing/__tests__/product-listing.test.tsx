@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ProductListing } from '../product-listing';
+import ProductListing from '../product-listing.tsx';
 import { productService } from '../service/productService';
 
 // Mock the product service to control API responses in tests
@@ -302,8 +302,9 @@ describe('ProductListing Component', () => {
       });
 
       const quantityInputs = screen.getAllByRole('spinbutton', { name: /quantity/i });
-      await user.clear(quantityInputs[0]);
-      await user.type(quantityInputs[0], '3');
+      // Clear input by selecting all and deleting
+      await user.tripleClick(quantityInputs[0]);
+      await user.keyboard('3');
 
       expect(quantityInputs[0]).toHaveValue(3);
     });
