@@ -60,17 +60,6 @@
   cursor: pointer;
   font-size: 0.9rem;
 }
-.product-listing__filters .price-slider {
-  width: 100%;
-  margin: 0.5rem 0;
-}
-.product-listing__filters .price-range-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: var(--plp-text-muted);
-  margin-top: 0.5rem;
-}
 .product-listing__main {
   flex: 1;
   display: flex;
@@ -450,4 +439,83 @@
   .promo-block__title {
     font-size: 1.2rem;
   }
+}
+.dualrange-filter {
+  width: 100%;
+  padding: 10px 0;
+}
+.dualrange-filter .slider-container {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  margin-top: 10px;
+}
+.dualrange-filter .thumb {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  outline: none;
+  background: none;
+  pointer-events: none;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 3;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.dualrange-filter .thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  border: 1px solid #d1d5db;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  margin-top: 1px;
+}
+.dualrange-filter .thumb::-moz-range-thumb {
+  border: 1px solid #d1d5db;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.dualrange-filter .thumb--left {
+  z-index: 4;
+}
+.dualrange-filter .thumb--right {
+  z-index: 5;
+}
+.dualrange-filter .slider-track-bg {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background-color: #e5e7eb;
+  border-radius: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.dualrange-filter .slider-track-fill {
+  position: absolute;
+  height: 4px;
+  background-color: #4f46e5;
+  border-radius: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+.dualrange-filter .price-range-label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 0.85rem;
+  color: var(--plp-text-muted);
 }

@@ -89,19 +89,6 @@
       font-size: 0.9rem;
     }
   }
-
-  .price-slider {
-    width: 100%;
-    margin: 0.5rem 0;
-  }
-
-  .price-range-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--plp-text-muted);
-    margin-top: 0.5rem;
-  }
 }
 
 // ==========================================
@@ -601,5 +588,110 @@
 
   .promo-block__title {
     font-size: 1.2rem;
+  }
+}
+
+.dualrange-filter {
+  // Variables for easy customization
+  @track-color: #e5e7eb; // Light gray
+  @range-color: #4f46e5; // Primary Brand Color
+  @thumb-color: #ffffff;
+  @thumb-border: #d1d5db;
+  @thumb-size: 18px;
+
+  width: 100%;
+  padding: 10px 0;
+
+  // 1. The container for the actual slider elements
+  // We need a specific relative container for the inputs to stack
+  .slider-container {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    margin-top: 10px;
+  }
+
+  // 2. The Inputs (The Logic)
+  // We stack them on top of each other and hide the default browser track
+  .thumb {
+    position: absolute;
+    width: 100%;
+    height: 0; // Height 0 so it doesn't block clicks, we only want the knob
+    outline: none;
+    background: none; // Hide default gray track
+    pointer-events: none; // CRITICAL: Allows clicking "through" the input to the one below
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 3;
+    left: 0;
+    top: 50%; // Center vertically
+    transform: translateY(-50%);
+
+    // 3. The Knobs (The Visuals)
+    // We re-enable pointer-events so the user can actually grab the knob
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      border: 1px solid @thumb-border;
+      height: @thumb-size;
+      width: @thumb-size;
+      border-radius: 50%;
+      background-color: @thumb-color;
+      cursor: pointer;
+      pointer-events: auto; // Re-enable clicking for just the knob
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      margin-top: 1px; // Slight adjustment for alignment
+    }
+
+    &::-moz-range-thumb {
+      border: 1px solid @thumb-border;
+      height: @thumb-size;
+      width: @thumb-size;
+      border-radius: 50%;
+      background-color: @thumb-color;
+      cursor: pointer;
+      pointer-events: auto;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  // Ensure the thumb being dragged or the one with higher value is accessible
+  .thumb--left {
+    z-index: 4;
+  }
+  .thumb--right {
+    z-index: 5;
+  }
+
+  // 4. The Visual Tracks (The Background)
+  // Since we hid the input backgrounds, we need these divs to show the lines
+  .slider-track-bg {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background-color: @track-color;
+    border-radius: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
+  .slider-track-fill {
+    position: absolute;
+    height: 4px;
+    background-color: @range-color;
+    border-radius: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  // 5. Labels
+  .price-range-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: var(--plp-text-muted);
   }
 }

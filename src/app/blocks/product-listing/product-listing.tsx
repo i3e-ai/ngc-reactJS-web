@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { productService } from './service/productService';
 import type {
@@ -27,6 +27,16 @@ const ProductListing: React.FC = () => {
   });
 
   const [addedToCart, setAddedToCart] = useState<string | null>(null);
+  const priceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (priceTimeoutRef.current) {
+        clearTimeout(priceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // API INTEGRATION
   const loadMoreProducts = useCallback(async (resetProducts = false) => {
@@ -196,16 +206,21 @@ const ProductListing: React.FC = () => {
     });
   }, []);
 
-  const handlePriceChange = useCallback((maxPrice: number) => {
+  const handlePriceRangeChange = useCallback((minPrice: number, maxPrice: number) => {
+    // Clear any existing timeout to prevent race conditions
+    if (priceTimeoutRef.current) {
+      clearTimeout(priceTimeoutRef.current);
+    }
+
     setState(prev => {
       const newState = {
         ...prev,
-        filter: { ...prev.filter, maxPrice },
+        filter: { ...prev.filter, minPrice, maxPrice },
         products: [],
         currentPage: 0,
         loading: true
       };
-      setTimeout(() => {
+      priceTimeoutRef.current = setTimeout(() => {
         productService.fetchProducts(1, 8, newState.filter).then(response => {
           if (response.success && response.data) {
             setState(current => ({
@@ -218,7 +233,7 @@ const ProductListing: React.FC = () => {
             }));
           }
         });
-      }, 0);
+      }, 300);
       return newState;
     });
   }, []);
@@ -307,21 +322,66 @@ const ProductListing: React.FC = () => {
           </div>
         </div>
 
-        <div className="filter-group">
-          <h4>Price Range: ${state.filter.maxPrice || 1000}</h4>
-          <input
-            type="range"
-            className="price-slider"
-            min="0"
-            max="1000"
-            defaultValue="1000"
-            onChange={(e) => handlePriceChange(parseInt(e.target.value))}
-          />
-          <div className="price-range-label">
-            <span>$0</span>
-            <span>$1000</span>
+        <div className='dualrange-filter'>
+          <h4>Price Range: ${state.filter.minPrice || 0} - ${state.filter.maxPrice || 1000}</h4>
+
+          <div style={{ marginBottom: '0.5rem' }}>
+            {/* Label */}
+            <label style={{ fontSize: '0.85rem', color: 'var(--plp-text-muted)' }}>
+              Min: {state.filter.minPrice || 0}
+            </label>
+
+            {/* CONTAINER FOR SLIDER LOGIC */}
+            <div className="slider-container">
+
+              {/* 1. VISUAL TRACKS (Background & Fill) */}
+              <div className="slider-track-bg" />
+              <div
+                className="slider-track-fill"
+                style={{
+                  left: `${((state.filter.minPrice || 0) / 1000) * 100}%`,
+                  width: `${(((state.filter.maxPrice || 1000) - (state.filter.minPrice || 0)) / 1000) * 100}%`
+                }}
+              />
+
+              {/* 2. INPUTS (Invisible Functionality) */}
+              <input
+                type='range'
+                min="0"
+                max="1000"
+                value={state.filter.minPrice || 0}
+                onChange={(e) => {
+                  const newMin = parseInt(e.target.value);
+                  const currentMax = state.filter.maxPrice || 1000;
+                  // Prevent crossing
+                  if (newMin >= currentMax) return;
+                  handlePriceRangeChange(newMin, currentMax);
+                }}
+                className='thumb thumb--left'
+              />
+              <input
+                type='range'
+                min='0'
+                max='1000'
+                value={state.filter.maxPrice || 1000}
+                onChange={(e) => {
+                  const newMax = parseInt(e.target.value);
+                  const currentMin = state.filter.minPrice || 0;
+                  // Prevent crossing
+                  if (newMax <= currentMin) return;
+                  handlePriceRangeChange(currentMin, newMax);
+                }}
+                className='thumb thumb--right'
+              />
+            </div>
+
+            <div className='price-range-label'>
+              <span>0</span>
+              <span>1000</span>
+            </div>
           </div>
         </div>
+
 
         <div className="filter-group">
           <h4>Availability</h4>
@@ -486,7 +546,14 @@ const PromoBlockComponent: React.FC<PromoBlockProps> = ({ promo }) => {
   return (
     <div className="promo-block">
       {promo.image && (
-        <Image src={promo.image} alt={promo.title} width={600} height={300} className="promo-block__image" />
+        <Image
+          src={promo.image}
+          alt={promo.title}
+          width={600}
+          height={300}
+          className="promo-block__image"
+          unoptimized
+        />
       )}
       <h2 className="promo-block__title">{promo.title}</h2>
       <p className="promo-block__description">{promo.description}</p>
