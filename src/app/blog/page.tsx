@@ -1,8 +1,37 @@
 // src/app/blog/page.tsx
 
 import React from 'react';
+import { Metadata } from 'next';
 import BlogHero from './blog-hero/blog-hero'
 import BlogContent from './blog-content/blog-content';
+import StructuredData from '../components/StructuredData/StructuredData';
+import { generateBlogPostingSchema } from '../utils/structuredData';
+
+export const metadata: Metadata = {
+  title: "The Future of AI in 2025",
+  description: "A deep dive into the trends shaping our world. Explore how AI continues to evolve and the key developments expected in 2025, from generative AI to autonomous systems.",
+  keywords: ["AI", "artificial intelligence", "2025", "technology trends", "generative AI", "machine learning"],
+  openGraph: {
+    title: "The Future of AI in 2025 | NGC Blog",
+    description: "A deep dive into the AI trends shaping our world in 2025.",
+    type: "article",
+    url: "https://ngc-website.com/blog",
+    images: [
+      {
+        url: "/assets/blog/future-of-ai.jpg",
+        width: 1200,
+        height: 630,
+        alt: "The Future of AI in 2025",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Future of AI in 2025",
+    description: "A deep dive into the AI trends shaping our world.",
+    images: ["/assets/blog/future-of-ai.jpg"],
+  },
+};
 
 const heroData = {
   imageUrl: 'assets/blog/future-of-ai.jpg', // URL from your /public folder
@@ -25,15 +54,29 @@ This article explores the most significant developments we can expect.
   </ul>
 `;
 
+const blogSchema = generateBlogPostingSchema({
+  title: 'The Future of AI in 2025',
+  description: 'A deep dive into the trends shaping our world. Explore how AI continues to evolve and the key developments expected in 2025.',
+  image: 'https://ngc-website.com/assets/blog/future-of-ai.jpg',
+  datePublished: '2025-01-15',
+  dateModified: '2025-01-15',
+  author: 'NGC Tech Team',
+  url: 'https://ngc-website.com/blog',
+  keywords: ['AI', 'artificial intelligence', '2025', 'technology trends', 'generative AI'],
+});
+
 const BlogPage: React.FC = () => {
   return (
-    <main>
-      <BlogHero
-        imageUrl={heroData.imageUrl}
-        contentHTML={heroData.contentHTML}
-      />
-      <BlogContent bodyHTML={articleBodyHTML} />
-    </main>
+    <>
+      <StructuredData data={blogSchema} />
+      <main>
+        <BlogHero
+          imageUrl={heroData.imageUrl}
+          contentHTML={heroData.contentHTML}
+        />
+        <BlogContent bodyHTML={articleBodyHTML} />
+      </main>
+    </>
   );
 };
 

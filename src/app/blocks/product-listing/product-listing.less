@@ -622,6 +622,7 @@
     background: none; // Hide default gray track
     pointer-events: none; // CRITICAL: Allows clicking "through" the input to the one below
     -webkit-appearance: none;
+    appearance: none;
     -webkit-tap-highlight-color: transparent;
     z-index: 3;
     left: 0;
@@ -632,6 +633,7 @@
     // We re-enable pointer-events so the user can actually grab the knob
     &::-webkit-slider-thumb {
       -webkit-appearance: none;
+      appearance: none;
       -webkit-tap-highlight-color: transparent;
       border: 1px solid @thumb-border;
       height: @thumb-size;

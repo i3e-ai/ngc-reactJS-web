@@ -52,10 +52,11 @@ const ProductDisplay: React.FC = () => {
             <div className="product__image-wrapper">
               <Image
                 src={product.image}
-                alt={product.title}
+                alt={`${product.title} - High quality product available for ${product.price}`}
                 width={500}
                 height={500}
                 style={{ objectFit: 'cover', width: '100%', height: 'auto' }}
+                loading="lazy"
               />
             </div>
             <div className="product__details">

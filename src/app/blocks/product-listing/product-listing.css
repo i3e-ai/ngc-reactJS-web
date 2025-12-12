@@ -459,6 +459,7 @@
   background: none;
   pointer-events: none;
   -webkit-appearance: none;
+  appearance: none;
   -webkit-tap-highlight-color: transparent;
   z-index: 3;
   left: 0;
@@ -467,6 +468,7 @@
 }
 .dualrange-filter .thumb::-webkit-slider-thumb {
   -webkit-appearance: none;
+  appearance: none;
   -webkit-tap-highlight-color: transparent;
   border: 1px solid #d1d5db;
   height: 18px;

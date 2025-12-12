@@ -22,8 +22,8 @@ describe('Header Component', () => {
   it('renders logo and title', () => {
     render(<Header />);
 
-    expect(screen.getByText('EDS App')).toBeInTheDocument();
-    expect(screen.getByAltText('EDS App Logo')).toBeInTheDocument();
+    expect(screen.getByText('NGC Platform')).toBeInTheDocument();
+    expect(screen.getByAltText(/NGC.*Logo/i)).toBeInTheDocument();
   });
 
   it('toggles menu open and closed', async () => {

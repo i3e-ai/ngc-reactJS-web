@@ -1,0 +1,20 @@
+# Sitemap
+Sitemap: https://ngc-website.com/sitemap.xml
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes if any
+Disallow: /api/
+Disallow: /admin/
+
+# Crawl-delay (optional, use if needed)
+# Crawl-delay: 1
+
+# Specific rules for different bots (optional)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /

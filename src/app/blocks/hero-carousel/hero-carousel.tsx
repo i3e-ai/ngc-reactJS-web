@@ -96,7 +96,7 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
             <figure className="carousel__image">
               <Image
                 src={slide.image}
-                alt={slide.title}
+                alt={`${slide.title} - ${slide.subtitle || 'Featured carousel content'}`}
                 fill
                 priority={index === 0}
                 loading={index === 0 ? 'eager' : 'lazy'}
