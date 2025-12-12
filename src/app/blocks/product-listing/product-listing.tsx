@@ -277,7 +277,7 @@ const ProductListing: React.FC = () => {
   return (
     <div className="product-listing">
       {/* ===== FILTER PANEL ===== */}
-      <aside className="product-listing__filters">
+      <aside className="product-listing__filters" aria-label="Product filters">
         <div className="filter-group">
           <h4>Category</h4>
           <div className="filter-option">
@@ -323,7 +323,7 @@ const ProductListing: React.FC = () => {
         </div>
 
         <div className='dualrange-filter'>
-          <h4>Price Range: ${state.filter.minPrice || 0} - ${state.filter.maxPrice || 1000}</h4>
+          <h2 className="filter-heading">Price Range: ${state.filter.minPrice || 0} - ${state.filter.maxPrice || 1000}</h2>
 
           <div style={{ marginBottom: '0.5rem' }}>
             {/* Label */}
@@ -384,7 +384,7 @@ const ProductListing: React.FC = () => {
 
 
         <div className="filter-group">
-          <h4>Availability</h4>
+          <h2 className="filter-heading">Availability</h2>
           <div className="filter-option">
             <input
               type="checkbox"
@@ -397,7 +397,7 @@ const ProductListing: React.FC = () => {
       </aside>
 
       {/* ===== MAIN CONTENT ===== */}
-      <main className="product-listing__main">
+      <main className="product-listing__main" aria-label="Product list">
         {/* Error State */}
         {state.error && (
           <div className="product-listing__error">

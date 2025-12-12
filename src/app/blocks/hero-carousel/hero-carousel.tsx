@@ -103,7 +103,7 @@ export default function HeroCarousel({ slides = carouselSlides }: HeroCarouselPr
               />
             </figure>
 
-            <nav className="carousel__content">
+            <nav className="carousel__content" aria-label="Slide content navigation">
               <h2 className="carousel__title">{slide.title}</h2>
               <p className="carousel__subtitle">{slide.subtitle}</p>
               <Link href={slide.buttonLink} className="carousel__button">

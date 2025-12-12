@@ -45,8 +45,8 @@ const ContentCurator: React.FC<ContentCuratorProps> = ({ curatorData = contentCu
                   />
                 </div>
                 <div className="curator__content">
-                  <h4 className="curator__eyebrow">{item.eyebrow}</h4>
-                  <h3 className="curator__item-title">{item.title}</h3>
+                  <h3 className="curator__eyebrow">{item.eyebrow}</h3>
+                  <h4 className="curator__item-title">{item.title}</h4>
                   <a href={item.link.href} className="curator__link">
                     {item.link.text}
                   </a>

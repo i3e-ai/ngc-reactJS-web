@@ -77,7 +77,7 @@
 .curator__eyebrow {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #0071e3;
+  color: #0051ba;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 0.5rem 0;
@@ -90,13 +90,13 @@
   line-height: 1.4;
 }
 .curator__link {
-  color: #0071e3;
+  color: #0051ba;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 .curator__link:hover {
-  color: #0051ba;
+  color: #004494;
   text-decoration: underline;
 }
 @keyframes scroll {
