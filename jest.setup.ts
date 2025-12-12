@@ -1,5 +1,9 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+import React from 'react';
+
+// Make React available globally for components
+global.React = React;
 
 // Mock Next.js Image component
 jest.mock('next/image', () => {
