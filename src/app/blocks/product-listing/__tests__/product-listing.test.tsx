@@ -1,8 +1,10 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+// @ts-expect-error - TS doesn't allow .tsx extension in imports but it's needed for Jest
 import ProductListing from '../product-listing.tsx';
 import { productService } from '../service/productService';
+import type { Product } from '../product-listing';
 
 // Mock the product service to control API responses in tests
 jest.mock('../service/productService', () => ({
@@ -14,7 +16,7 @@ jest.mock('../service/productService', () => ({
 const mockProductService = productService as jest.Mocked<typeof productService>;
 
 describe('ProductListing Component', () => {
-  const mockProducts = [
+  const mockProducts: Product[] = [
     {
       id: '1',
       sales_category_title: 'Test Product 1',
@@ -24,7 +26,9 @@ describe('ProductListing Component', () => {
       originalPrice: 39.99,
       image: 'https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png',
       inStock: true,
-      badges: [{ label: 'New', type: 'new', color: '#007bff' }],
+      quantity: 1,
+      description: 'Test product description',
+      badges: [{ label: 'New', type: 'new' as const, color: '#007bff' }],
     },
     {
       id: '2',
@@ -35,6 +39,8 @@ describe('ProductListing Component', () => {
       originalPrice: undefined,
       image: 'https://cdn.dummyjson.com/products/images/fragrances/Calvin%20Klein%20CK%20One/1.png',
       inStock: true,
+      quantity: 1,
+      description: 'Test product description',
       badges: [],
     },
   ];
@@ -46,8 +52,12 @@ describe('ProductListing Component', () => {
       promos: [],
     },
     pagination: {
+      currentPage: 1,
+      totalPages: 2,
       hasNext: true,
+      hasPrev: false,
       totalItems: 10,
+      itemsPerPage: 8,
     },
   };
 
@@ -322,8 +332,12 @@ describe('ProductListing Component', () => {
           promos: [],
         },
         pagination: {
+          currentPage: 1,
+          totalPages: 1,
           hasNext: false,
+          hasPrev: false,
           totalItems: 1,
+          itemsPerPage: 8,
         },
       });
 
@@ -365,8 +379,12 @@ describe('ProductListing Component', () => {
       mockProductService.fetchProducts.mockResolvedValue({
         ...mockSuccessResponse,
         pagination: {
+          currentPage: 1,
+          totalPages: 1,
           hasNext: false,
+          hasPrev: false,
           totalItems: 2,
+          itemsPerPage: 8,
         },
       });
 
@@ -385,6 +403,7 @@ describe('ProductListing Component', () => {
     it('displays error message when API fails', async () => {
       mockProductService.fetchProducts.mockResolvedValue({
         success: false,
+        data: null,
         message: 'Failed to fetch products',
         pagination: undefined,
       });
@@ -399,6 +418,7 @@ describe('ProductListing Component', () => {
     it('shows retry button on error', async () => {
       mockProductService.fetchProducts.mockResolvedValue({
         success: false,
+        data: null,
         message: 'Network error',
         pagination: undefined,
       });
@@ -416,6 +436,7 @@ describe('ProductListing Component', () => {
       // First call fails
       mockProductService.fetchProducts.mockResolvedValueOnce({
         success: false,
+        data: null,
         message: 'Network error',
         pagination: undefined,
       });
@@ -447,8 +468,12 @@ describe('ProductListing Component', () => {
           promos: [],
         },
         pagination: {
+          currentPage: 1,
+          totalPages: 0,
           hasNext: false,
+          hasPrev: false,
           totalItems: 0,
+          itemsPerPage: 8,
         },
       });
 

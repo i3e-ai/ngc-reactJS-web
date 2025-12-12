@@ -7,11 +7,11 @@ global.React = React;
 
 // Mock Next.js Image component
 jest.mock('next/image', () => {
+  const React = jest.requireActual('react');
   return {
     __esModule: true,
-    default: function Image(props: any) {
-      // eslint-disable-next-line jsx-a11y/alt-text, @next/next/no-img-element
-      return require('react').createElement('img', props);
+    default: function Image(props: React.ImgHTMLAttributes<HTMLImageElement>) {
+      return React.createElement('img', props);
     },
   };
 });
@@ -40,12 +40,12 @@ global.IntersectionObserver = class IntersectionObserver {
     return [];
   }
   unobserve() {}
-} as any;
+} as unknown as typeof IntersectionObserver;
 
 // Suppress console errors during tests (optional)
 const originalError = console.error;
 beforeAll(() => {
-  console.error = (...args: any[]) => {
+  console.error = (...args: unknown[]) => {
     if (
       typeof args[0] === 'string' &&
       args[0].includes('Warning: ReactDOM.render')

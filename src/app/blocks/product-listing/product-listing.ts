@@ -1,5 +1,3 @@
-import { title } from 'process';
-
 export interface Badge {
   type: 'new' | 'sold' | 'on-sale' | 'limited' | 'best-seller';
   label: string;

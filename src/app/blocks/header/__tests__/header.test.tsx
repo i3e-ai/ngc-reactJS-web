@@ -5,7 +5,7 @@ import Header from '../header';
 
 // Mock the Navigation component to isolate Header testing
 jest.mock('../../navigation/navigation', () => {
-  return function MockNavigation({ isOpen, onLinkClick }: any) {
+  return function MockNavigation({ onLinkClick }: { isOpen: boolean; onLinkClick: () => void }) {
     return (
       <nav data-testid="mock-navigation">
         <button onClick={onLinkClick}>Mock Link</button>
