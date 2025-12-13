@@ -13,13 +13,20 @@ main .section.product-container {
   font-size: @text-3xl;
 }
 
+section[aria-label='Featured products'] {
+  background-color: white;
+  width: 100%;
+  padding: 2rem 0;
+}
+
 .product {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   max-width: 1200px;
   margin: @space-4 auto;
-  padding: 0;
+  padding: 0 @space-4;
+  background-color: white;
 }
 
 .product__card {

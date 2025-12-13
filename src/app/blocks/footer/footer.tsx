@@ -22,9 +22,6 @@ export default function Footer() {
           </nav>
         </div>
       </div>
-      <div className="footer__bottom">
-        <p>All Rights Reserved</p>
-      </div>
     </footer>
   )
 }
