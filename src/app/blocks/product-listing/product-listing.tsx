@@ -35,9 +35,7 @@ const ProductListing: React.FC = () => {
       if (priceTimeoutRef.current) {
         clearTimeout(priceTimeoutRef.current);
       }
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
+      // Don't abort - causes issues with StrictMode
     };
   }, []);
 
@@ -50,17 +48,9 @@ const ProductListing: React.FC = () => {
     resetProducts: boolean,
     filters: typeof state.filter
   ) => {
-    // Prevent duplicate requests
-    if (loadingRef.current) {
-      console.log('Already loading, skipping request');
-      return;
-    }
-
-    // Cancel any pending request
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    abortControllerRef.current = new AbortController();
+    // Create new abort controller for this request
+    const currentController = new AbortController();
+    abortControllerRef.current = currentController;
 
     loadingRef.current = true;
     setState(prev => ({ ...prev, loading: true, error: null }));
@@ -70,8 +60,8 @@ const ProductListing: React.FC = () => {
 
       const response = await productService.fetchProducts(page, 8, filters);
 
-      // Check if request was aborted
-      if (abortControllerRef.current?.signal.aborted) {
+      // Check if THIS request was aborted
+      if (currentController.signal.aborted) {
         console.log('Request was aborted');
         return;
       }
@@ -79,17 +69,21 @@ const ProductListing: React.FC = () => {
       if (response.success && response.data) {
         console.log(`Received ${response.data.products.length} products`);
 
-        // Inject promo every 2 pages
-        const shouldInjectPromo = page % 2 === 0 && response.data.promos.length > 0;
-
         const newProducts = resetProducts
           ? response.data.products
           : [...state.products, ...response.data.products];
 
-        if (shouldInjectPromo) {
-          const promoIndex = Math.floor(page / 2) - 1;
-          const promo = response.data.promos[promoIndex % response.data.promos.length];
-          const uniquePromoId = `promo-${page}-${Date.now()}`;
+        // Inject promo after every 8 products
+        // Count existing promos to avoid duplicates
+        const existingPromoCount = newProducts.filter(
+          (item) => 'type' in item && item.type === 'promo'
+        ).length;
+        const productOnlyCount = newProducts.length - existingPromoCount;
+        const expectedPromoCount = Math.floor(productOnlyCount / 8);
+
+        if (expectedPromoCount > existingPromoCount && response.data.promos.length > 0) {
+          const promo = response.data.promos[existingPromoCount % response.data.promos.length];
+          const uniquePromoId = `promo-${productOnlyCount}-${Date.now()}`;
 
           newProducts.push({
             ...promo,
@@ -97,7 +91,7 @@ const ProductListing: React.FC = () => {
             type: 'promo'
           } as Product & PromoBlock & { type: 'promo' });
 
-          console.log(`Injected promo block with ID: ${uniquePromoId}`);
+          console.log(`Injected promo block with ID: ${uniquePromoId} after ${productOnlyCount} products`);
         }
 
         setState(prev => ({
@@ -421,7 +415,7 @@ const ProductListing: React.FC = () => {
         {/* End of Results */}
         {!state.hasMore && state.products.length > 0 && !state.loading && (
           <div className="product-listing__end">
-            <p>You&apos;ve viewed all {state.totalProducts} products</p>
+            <p>You&apos;ve viewed all {state.products.filter(p => !('type' in p && p.type === 'promo')).length} products</p>
           </div>
         )}
 

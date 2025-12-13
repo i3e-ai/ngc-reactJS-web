@@ -4,7 +4,7 @@ import {
   Product,
   Badge,
   PromoBlock,
-} from '../product-listing';
+} from '../types';
 
 // API Configuration
 const API_CONFIG = {
@@ -163,7 +163,8 @@ class ProductService {
       // Mock promo blocks
       const promos: PromoBlock[] = this.getMockPromos();
 
-      // Calculate correct pagination for filtered results
+      // Calculate correct pagination using API's total count
+      const totalFromApi = data.total;
       const result: ApiResponse<{ products: Product[]; promos: PromoBlock[] }> =
         {
           data: {
@@ -173,10 +174,10 @@ class ProductService {
           success: true,
           pagination: {
             currentPage: page,
-            totalPages: Math.ceil(filteredProducts.length / limit),
-            totalItems: filteredProducts.length,
+            totalPages: Math.ceil(totalFromApi / limit),
+            totalItems: totalFromApi,
             itemsPerPage: limit,
-            hasNext: filteredProducts.length > limit,
+            hasNext: skip + limit < totalFromApi,
             hasPrev: page > 1,
           },
         };
