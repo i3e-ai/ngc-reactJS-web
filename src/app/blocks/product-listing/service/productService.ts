@@ -54,7 +54,6 @@ class ProductService {
   private transformProduct(apiProduct: DummyJSONProduct): Product {
     const badges: Badge[] = [];
 
-    // Add "Sale" badge if discount exists
     if (apiProduct.discountPercentage > 0) {
       badges.push({
         type: 'on-sale',
@@ -63,7 +62,6 @@ class ProductService {
       });
     }
 
-    // Add "New" badge randomly (or based on some logic)
     if (apiProduct.id > 90) {
       badges.push({
         type: 'new',
@@ -72,7 +70,6 @@ class ProductService {
       });
     }
 
-    // Add "Low Stock" if stock < 50
     if (apiProduct.stock < 50) {
       badges.push({
         type: 'limited',
@@ -104,6 +101,11 @@ class ProductService {
 
   /**
    * Fetch products from DummyJSON API with pagination
+   *
+   * FIXED: Now handles client-side filtering correctly by:
+   * 1. Fetching more products than needed
+   * 2. Applying filters
+   * 3. Returning correct pagination based on filtered results
    */
   async fetchProducts(
     page: number = 1,
@@ -111,64 +113,70 @@ class ProductService {
     filters?: ProductFilters
   ): Promise<ApiResponse<{ products: Product[]; promos: PromoBlock[] }>> {
     try {
-      // Build cache key
       const cacheKey = `products-${page}-${limit}-${JSON.stringify(
         filters || {}
       )}`;
 
-      // Check cache
       if (this.cache.has(cacheKey)) {
         console.log('Returning cached data');
         return this.cache.get(cacheKey);
       }
 
-      // Calculate skip for pagination
-      const skip = (page - 1) * limit;
+      // For client-side filters (price, stock), we need to fetch MORE products
+      // to ensure we have enough after filtering
+      const hasClientSideFilters =
+        filters?.minPrice !== undefined ||
+        filters?.maxPrice !== undefined ||
+        filters?.inStockOnly;
 
-      // Build API URL with query parameters
-      let url = `${API_CONFIG.BASE_URL}/products?limit=${limit}&skip=${skip}`;
+      // Fetch 3x more products if we have client-side filters
+      const fetchLimit = hasClientSideFilters ? limit * 3 : limit;
+      const skip = (page - 1) * fetchLimit;
 
-      // Apply category filter if provided (skip if 'all')
+      // Build API URL
+      let url = `${API_CONFIG.BASE_URL}/products?limit=${fetchLimit}&skip=${skip}`;
+
       if (filters?.category && filters.category !== 'all') {
-        url = `${API_CONFIG.BASE_URL}/products/category/${filters.category}?limit=${limit}&skip=${skip}`;
+        url = `${API_CONFIG.BASE_URL}/products/category/${filters.category}?limit=${fetchLimit}&skip=${skip}`;
       }
 
-      // Apply search filter if provided
       if (filters?.searchQuery) {
         url = `${API_CONFIG.BASE_URL}/products/search?q=${encodeURIComponent(
           filters.searchQuery
-        )}&limit=${limit}&skip=${skip}`;
+        )}&limit=${fetchLimit}&skip=${skip}`;
       }
 
       console.log('Fetching from API:', url);
 
-      // Fetch from API
       const response = await this.fetchWithRetry(url);
       const data: DummyJSONResponse = await response.json();
 
-      // Transform API products to our format
-      let products = data.products.map((p) => this.transformProduct(p));
+      // Transform products
+      const products = data.products.map((p) => this.transformProduct(p));
 
-      // Apply client-side filters (price range, stock)
-      products = this.applyClientSideFilters(products, filters);
+      // Apply client-side filters
+      const filteredProducts = this.applyClientSideFilters(products, filters);
 
-      // Mock promo blocks (DummyJSON doesn't provide promos)
+      // Take only the requested limit from filtered results
+      const paginatedProducts = filteredProducts.slice(0, limit);
+
+      // Mock promo blocks
       const promos: PromoBlock[] = this.getMockPromos();
 
-      // Build response
+      // Calculate correct pagination for filtered results
       const result: ApiResponse<{ products: Product[]; promos: PromoBlock[] }> =
         {
           data: {
-            products,
+            products: paginatedProducts,
             promos,
           },
           success: true,
           pagination: {
             currentPage: page,
-            totalPages: Math.ceil(data.total / limit),
-            totalItems: data.total,
+            totalPages: Math.ceil(filteredProducts.length / limit),
+            totalItems: filteredProducts.length,
             itemsPerPage: limit,
-            hasNext: skip + limit < data.total,
+            hasNext: filteredProducts.length > limit,
             hasPrev: page > 1,
           },
         };

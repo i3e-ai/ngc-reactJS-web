@@ -1,46 +1,22 @@
-// src/app/blocks/product-listing/product-listing.less
-
-/**
- * PURPOSE: Comprehensive styling for product listing component
- * WORKING:
- * - CSS variables for consistent theming
- * - Responsive grid layout (4→3→2→1 columns)
- * - Shimmer loading animations
- * - BEM-like naming convention
- */
-
-// ==========================================
-// CSS VARIABLES (THEMING)
-// ==========================================
+// Product Listing Styles
 
 :root {
-  // Color palette
   --plp-primary-color: #4a4a4a;
   --plp-border-color: #e0e0e0;
   --plp-background-color: #f9f9f9;
   --plp-card-bg: #ffffff;
   --plp-text-muted: #595959;
   --plp-hover-bg: #333333;
-
-  // Shimmer animation colors
   --plp-shimmer-bg: #e0e0e0;
   --plp-shimmer-highlight: #f5f5f5;
-
-  // Badge colors
   --plp-badge-new: #007bff;
   --plp-badge-sold: #dc3545;
   --plp-badge-sale: #28a745;
   --plp-badge-limited: #ffc107;
-
-  // Spacing
   --plp-gap: 1.5rem;
   --plp-padding: 1rem;
   --plp-border-radius: 8px;
 }
-
-// ==========================================
-// MAIN CONTAINER
-// ==========================================
 
 .product-listing {
   display: flex;
@@ -49,72 +25,93 @@
   margin: 0 auto;
   padding: 1.5rem;
   background-color: var(--plp-background-color);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--plp-primary-color);
-}
 
-// ==========================================
-// FILTER PANEL (LEFT SIDEBAR)
-// ==========================================
+  &__filters {
+    flex-basis: 250px;
+    flex-shrink: 0;
+  }
 
-.product-listing__filters {
-  flex-basis: 250px;
-  flex-shrink: 0;
+  &__main {
+    flex: 1;
+  }
 
-  .filter-group {
-    border-bottom: 1px solid var(--plp-border-color);
-    padding: var(--plp-padding) 0;
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--plp-gap);
+    margin-bottom: 2rem;
+  }
 
-    h4 {
-      margin: 0 0 0.75rem 0;
-      font-size: 1rem;
+  &__load-more {
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  &__end {
+    text-align: center;
+    padding: 2rem;
+    color: var(--plp-text-muted);
+  }
+
+  &__error {
+    text-align: center;
+    padding: 2rem;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: var(--plp-border-radius);
+    margin-bottom: 2rem;
+
+    p {
+      margin: 0 0 1rem 0;
+      color: #856404;
+    }
+    button {
+      background: #ffc107;
+      border: 0;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
       font-weight: 600;
-    }
-  }
-
-  .filter-option {
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-
-    input[type='checkbox'],
-    input[type='radio'] {
-      cursor: pointer;
-    }
-
-    label {
-      margin-left: 0.5rem;
-      cursor: pointer;
-      font-size: 0.9rem;
+      color: #856404;
+      &:hover {
+        background: #e0a800;
+      }
     }
   }
 }
 
-// ==========================================
-// MAIN CONTENT AREA
-// ==========================================
+.filter-group {
+  border-bottom: 1px solid var(--plp-border-color);
+  padding: var(--plp-padding) 0;
 
-.product-listing__main {
-  flex: 1;
+  h4 {
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+}
+
+.filter-option {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    cursor: pointer;
+    accent-color: #4f46e5;
+    width: 16px;
+    height: 16px;
+  }
+
+  label {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
 }
-
-// ==========================================
-// PRODUCT GRID
-// ==========================================
-
-.product-listing__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); // 4 columns desktop
-  gap: var(--plp-gap);
-  margin-bottom: 2rem;
-}
-
-// ==========================================
-// PRODUCT CARD
-// ==========================================
 
 .product-card {
   background: var(--plp-card-bg);

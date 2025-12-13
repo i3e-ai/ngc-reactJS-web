@@ -1,11 +1,3 @@
-/**
- * PURPOSE: Comprehensive styling for product listing component
- * WORKING:
- * - CSS variables for consistent theming
- * - Responsive grid layout (4→3→2→1 columns)
- * - Shimmer loading animations
- * - BEM-like naming convention
- */
 :root {
   --plp-primary-color: #4a4a4a;
   --plp-border-color: #e0e0e0;
@@ -30,46 +22,80 @@
   margin: 0 auto;
   padding: 1.5rem;
   background-color: var(--plp-background-color);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--plp-primary-color);
 }
 .product-listing__filters {
   flex-basis: 250px;
   flex-shrink: 0;
 }
-.product-listing__filters .filter-group {
-  border-bottom: 1px solid var(--plp-border-color);
-  padding: var(--plp-padding) 0;
-}
-.product-listing__filters .filter-group h4 {
-  margin: 0 0 0.75rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
-.product-listing__filters .filter-option {
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-}
-.product-listing__filters .filter-option input[type='checkbox'],
-.product-listing__filters .filter-option input[type='radio'] {
-  cursor: pointer;
-}
-.product-listing__filters .filter-option label {
-  margin-left: 0.5rem;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
 .product-listing__main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 .product-listing__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--plp-gap);
   margin-bottom: 2rem;
+}
+.product-listing__load-more {
+  text-align: center;
+  margin: 2rem 0;
+}
+.product-listing__end {
+  text-align: center;
+  padding: 2rem;
+  color: var(--plp-text-muted);
+}
+.product-listing__error {
+  text-align: center;
+  padding: 2rem;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: var(--plp-border-radius);
+  margin-bottom: 2rem;
+}
+.product-listing__error p {
+  margin: 0 0 1rem 0;
+  color: #856404;
+}
+.product-listing__error button {
+  background: #ffc107;
+  border: 0;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #856404;
+}
+.product-listing__error button:hover {
+  background: #e0a800;
+}
+.filter-group {
+  border-bottom: 1px solid var(--plp-border-color);
+  padding: var(--plp-padding) 0;
+}
+.filter-group h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.filter-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.filter-option input[type='checkbox'],
+.filter-option input[type='radio'] {
+  cursor: pointer;
+  accent-color: #4f46e5;
+  width: 16px;
+  height: 16px;
+}
+.filter-option label {
+  margin-left: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
 }
 .product-card {
   background: var(--plp-card-bg);

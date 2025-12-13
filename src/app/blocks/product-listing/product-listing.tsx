@@ -13,8 +13,6 @@ import type {
 import './product-listing.css';
 
 const ProductListing: React.FC = () => {
-  //Single state object contains all component state
-
   const [state, setState] = useState<ProductListingState>({
     products: [],
     loading: false,
@@ -28,61 +26,71 @@ const ProductListing: React.FC = () => {
 
   const [addedToCart, setAddedToCart] = useState<string | null>(null);
   const priceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const loadingRef = useRef<boolean>(false);
 
-  // Cleanup timeout on unmount
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (priceTimeoutRef.current) {
         clearTimeout(priceTimeoutRef.current);
       }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, []);
 
-  // API INTEGRATION
-  const loadMoreProducts = useCallback(async (resetProducts = false) => {
+  /**
+   * FIXED: Single source of truth for loading products
+   * Prevents race conditions by canceling previous requests
+   */
+  const loadProducts = useCallback(async (
+    page: number,
+    resetProducts: boolean,
+    filters: typeof state.filter
+  ) => {
     // Prevent duplicate requests
-    if (state.loading) {
+    if (loadingRef.current) {
       console.log('Already loading, skipping request');
       return;
     }
 
-    console.log('Loading more products...');
+    // Cancel any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
+    loadingRef.current = true;
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      // Calculate next page number
-      const nextPage = resetProducts ? 1 : state.currentPage + 1;
+      console.log(`Fetching page ${page} with filters:`, filters);
 
-      console.log(`Fetching page ${nextPage}`);
+      const response = await productService.fetchProducts(page, 8, filters);
 
-      // Fetch from API
-      const response = await productService.fetchProducts(
-        nextPage,
-        8, // Load 8 products at a time
-        state.filter
-      );
+      // Check if request was aborted
+      if (abortControllerRef.current?.signal.aborted) {
+        console.log('Request was aborted');
+        return;
+      }
 
       if (response.success && response.data) {
-        console.log(` Received ${response.data.products.length} products`);
+        console.log(`Received ${response.data.products.length} products`);
 
-        // Determine if we should inject a promo block
-        // Inject after every 2 pages (16 products)
-        const shouldInjectPromo = nextPage % 2 === 0 && response.data.promos.length > 0;
+        // Inject promo every 2 pages
+        const shouldInjectPromo = page % 2 === 0 && response.data.promos.length > 0;
 
-        // Build new products array
         const newProducts = resetProducts
           ? response.data.products
           : [...state.products, ...response.data.products];
 
-        // Inject promo block if needed
         if (shouldInjectPromo) {
-          const promoIndex = Math.floor(nextPage / 2) - 1;
+          const promoIndex = Math.floor(page / 2) - 1;
           const promo = response.data.promos[promoIndex % response.data.promos.length];
+          const uniquePromoId = `promo-${page}-${Date.now()}`;
 
-          // Create truly unique ID using timestamp to avoid any collision
-          const uniquePromoId = `promo-${nextPage}-${Date.now()}`;
-
-          // Add promo as a special "product" with type marker and unique ID
           newProducts.push({
             ...promo,
             id: uniquePromoId,
@@ -92,17 +100,16 @@ const ProductListing: React.FC = () => {
           console.log(`Injected promo block with ID: ${uniquePromoId}`);
         }
 
-        // Update state
         setState(prev => ({
           ...prev,
           products: newProducts,
-          currentPage: nextPage,
+          currentPage: page,
           hasMore: response.pagination?.hasNext || false,
           totalProducts: response.pagination?.totalItems || 0,
-          loading: false
+          loading: false,
+          filter: filters
         }));
       } else {
-        // Handle API error
         console.error('API returned error:', response.message);
         setState(prev => ({
           ...prev,
@@ -111,34 +118,46 @@ const ProductListing: React.FC = () => {
         }));
       }
     } catch (error) {
-      // Handle network error
+      // Ignore abort errors
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.log('Request aborted');
+        return;
+      }
+
       console.error('Network error:', error);
       setState(prev => ({
         ...prev,
         loading: false,
         error: error instanceof Error ? error.message : 'Network error occurred'
       }));
+    } finally {
+      loadingRef.current = false;
     }
-  }, [state.currentPage, state.loading, state.filter, state.products]);
-
+  }, [state.products]);
 
   /**
-   * Event Handlers
-   * Handle quantity change for a product
-   * Updates the selectedQuantities map in state
+   * Load more products (pagination)
+   */
+  const loadMoreProducts = useCallback(async () => {
+    if (state.loading || !state.hasMore) return;
+    await loadProducts(state.currentPage + 1, false, state.filter);
+  }, [state.loading, state.hasMore, state.currentPage, state.filter, loadProducts]);
+
+  /**
+   * FIXED: Handle quantity change
    */
   const handleQuantityChange = useCallback((productId: string, quantity: number) => {
     setState(prev => ({
       ...prev,
       selectedQuantities: {
         ...prev.selectedQuantities,
-        [productId]: Math.max(1, quantity) // Minimum quantity is 1
+        [productId]: Math.max(1, quantity)
       }
     }));
   }, []);
 
   /**
-   * Handle add to cart button click
+   * FIXED: Handle add to cart
    */
   const handleAddToCart = useCallback((product: Product) => {
     const quantity = state.selectedQuantities[product.id] || 1;
@@ -152,123 +171,85 @@ const ProductListing: React.FC = () => {
 
     setAddedToCart(product.id);
     setTimeout(() => setAddedToCart(null), 2000);
-    // In production, you would call:
-    // cartService.addItem(product, quantity);
-    alert(`✅ Added ${quantity}x ${product.sales_category_title} to cart!\n\nPrice: $${product.price.toFixed(2)}\nTotal: $${(product.price * quantity).toFixed(2)}`);
 
+    alert(`✅ Added ${quantity}x ${product.sales_category_title} to cart!\n\nPrice: $${product.price.toFixed(2)}\nTotal: $${(product.price * quantity).toFixed(2)}`);
   }, [state.selectedQuantities]);
 
-  /** Retry loading after error Resets state and tries again from page 1 */
+  /**
+   * FIXED: Retry after error
+   */
   const handleRetry = useCallback(() => {
     console.log('🔄 Retrying...');
-    setState(prev => ({
-      ...prev,
-      currentPage: 0,
-      error: null
-    }));
-    loadMoreProducts(true);
-  }, [loadMoreProducts]);
+    loadProducts(1, true, state.filter);
+  }, [state.filter, loadProducts]);
 
-  /*Load initial products on component mount */
+  /**
+   * Load initial products on mount
+   */
   useEffect(() => {
     console.log('🚀 Component mounted, loading initial products');
-    loadMoreProducts(true);
+    loadProducts(1, true, {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Intentionally empty - only run on mount
+  }, []); // Only run on mount
 
-  //Handle Filter Changes
+  /**
+   * FIXED: Handle category change
+   */
   const handleCategoryChange = useCallback((category: string) => {
-    console.log(`Filter Changed : ${category}`);
-    setState(prev => {
-      const newState = {
-        ...prev,
-        filter: { ...prev.filter, category },
-        products: [],
-        currentPage: 0,
-        loading: true
-      };
-      // Reload Products with new filters using updated state
-      setTimeout(() => {
-        productService.fetchProducts(1, 8, newState.filter).then(response => {
-          if (response.success && response.data) {
-            setState(current => ({
-              ...current,
-              products: response.data!.products,
-              currentPage: 1,
-              hasMore: response.pagination?.hasNext || false,
-              totalProducts: response.pagination?.totalItems || 0,
-              loading: false
-            }));
-          }
-        });
-      }, 0);
-      return newState;
-    });
-  }, []);
+    console.log(`Filter Changed: ${category}`);
+    const newFilter = { ...state.filter, category };
 
+    // Clear cache for new filter
+    productService.clearCache();
+
+    // Load with new filter
+    loadProducts(1, true, newFilter);
+  }, [state.filter, loadProducts]);
+
+  /**
+   * FIXED: Handle price range change with proper debouncing
+   */
   const handlePriceRangeChange = useCallback((minPrice: number, maxPrice: number) => {
-    // Clear any existing timeout to prevent race conditions
+    // Clear existing timeout
     if (priceTimeoutRef.current) {
       clearTimeout(priceTimeoutRef.current);
     }
 
-    setState(prev => {
-      const newState = {
-        ...prev,
-        filter: { ...prev.filter, minPrice, maxPrice },
-        products: [],
-        currentPage: 0,
-        loading: true
-      };
-      priceTimeoutRef.current = setTimeout(() => {
-        productService.fetchProducts(1, 8, newState.filter).then(response => {
-          if (response.success && response.data) {
-            setState(current => ({
-              ...current,
-              products: response.data!.products,
-              currentPage: 1,
-              hasMore: response.pagination?.hasNext || false,
-              totalProducts: response.pagination?.totalItems || 0,
-              loading: false
-            }));
-          }
-        });
-      }, 300);
-      return newState;
-    });
-  }, []);
+    // Update filter state immediately for UI responsiveness
+    setState(prev => ({
+      ...prev,
+      filter: { ...prev.filter, minPrice, maxPrice }
+    }));
 
-  const handleStockFilter = useCallback((inStockOnly: boolean) => {
-    setState(prev => {
-      const newState = {
-        ...prev,
-        filter: { ...prev.filter, inStockOnly },
-        products: [],
-        currentPage: 0,
-        loading: true
-      };
-      setTimeout(() => {
-        productService.fetchProducts(1, 8, newState.filter).then(response => {
-          if (response.success && response.data) {
-            setState(current => ({
-              ...current,
-              products: response.data!.products,
-              currentPage: 1,
-              hasMore: response.pagination?.hasNext || false,
-              totalProducts: response.pagination?.totalItems || 0,
-              loading: false
-            }));
-          }
-        });
-      }, 0);
-      return newState;
-    });
-  }, []);
+    // Debounce the actual API call
+    priceTimeoutRef.current = setTimeout(() => {
+      console.log(`Price filter changed: $${minPrice} - $${maxPrice}`);
+      const newFilter = { ...state.filter, minPrice, maxPrice };
 
+      // Clear cache for new filter
+      productService.clearCache();
+
+      // Load with new filter
+      loadProducts(1, true, newFilter);
+    }, 500); // Increased to 500ms for better UX
+  }, [state.filter, loadProducts]);
 
   /**
-   * Determine if an item is a promo block
-   * Promo blocks are injected as special products with type='promo'
+   * FIXED: Handle stock filter
+   */
+  const handleStockFilter = useCallback((inStockOnly: boolean) => {
+    console.log(`Stock filter changed: ${inStockOnly}`);
+    const newFilter = { ...state.filter, inStockOnly };
+
+    // Clear cache for new filter
+    productService.clearCache();
+
+    // Load with new filter
+    loadProducts(1, true, newFilter);
+  }, [state.filter, loadProducts]);
+
+  /**
+   * Type guard for promo blocks
    */
   const isPromoBlock = (item: Product | (PromoBlock & { type: 'promo' })): item is PromoBlock & { type: 'promo' } => {
     return 'type' in item && item.type === 'promo';
@@ -279,7 +260,7 @@ const ProductListing: React.FC = () => {
       {/* ===== FILTER PANEL ===== */}
       <aside className="product-listing__filters" aria-label="Product filters">
         <div className="filter-group">
-          <h4>Category</h4>
+          <h3>Category</h3>
           <div className="filter-option">
             <input
               type="radio"
@@ -323,18 +304,14 @@ const ProductListing: React.FC = () => {
         </div>
 
         <div className='dualrange-filter'>
-          <h2 className="filter-heading">Price Range: ${state.filter.minPrice || 0} - ${state.filter.maxPrice || 1000}</h2>
+          <h3 className="filter-heading">Price Range: ${state.filter.minPrice || 0} - ${state.filter.maxPrice || 1000}</h3>
 
           <div style={{ marginBottom: '0.5rem' }}>
-            {/* Label */}
             <label style={{ fontSize: '0.85rem', color: 'var(--plp-text-muted)' }}>
-              Min: {state.filter.minPrice || 0}
+              Min: ${state.filter.minPrice || 0}
             </label>
 
-            {/* CONTAINER FOR SLIDER LOGIC */}
             <div className="slider-container">
-
-              {/* 1. VISUAL TRACKS (Background & Fill) */}
               <div className="slider-track-bg" />
               <div
                 className="slider-track-fill"
@@ -344,7 +321,6 @@ const ProductListing: React.FC = () => {
                 }}
               />
 
-              {/* 2. INPUTS (Invisible Functionality) */}
               <input
                 type='range'
                 min="0"
@@ -353,7 +329,6 @@ const ProductListing: React.FC = () => {
                 onChange={(e) => {
                   const newMin = parseInt(e.target.value);
                   const currentMax = state.filter.maxPrice || 1000;
-                  // Prevent crossing
                   if (newMin >= currentMax) return;
                   handlePriceRangeChange(newMin, currentMax);
                 }}
@@ -367,7 +342,6 @@ const ProductListing: React.FC = () => {
                 onChange={(e) => {
                   const newMax = parseInt(e.target.value);
                   const currentMin = state.filter.minPrice || 0;
-                  // Prevent crossing
                   if (newMax <= currentMin) return;
                   handlePriceRangeChange(currentMin, newMax);
                 }}
@@ -376,19 +350,19 @@ const ProductListing: React.FC = () => {
             </div>
 
             <div className='price-range-label'>
-              <span>0</span>
-              <span>1000</span>
+              <span>$0</span>
+              <span>$1000</span>
             </div>
           </div>
         </div>
 
-
         <div className="filter-group">
-          <h2 className="filter-heading">Availability</h2>
+          <h3 className="filter-heading">Availability</h3>
           <div className="filter-option">
             <input
               type="checkbox"
               id="in-stock"
+              checked={state.filter.inStockOnly || false}
               onChange={(e) => handleStockFilter(e.target.checked)}
             />
             <label htmlFor="in-stock">In Stock Only</label>
@@ -408,7 +382,6 @@ const ProductListing: React.FC = () => {
 
         {/* Product Grid */}
         <div className="product-listing__grid">
-          {/* Render products and promo blocks */}
           {state.products.map((item) =>
             isPromoBlock(item) ? (
               <PromoBlockComponent key={item.id} promo={item} />
@@ -434,7 +407,7 @@ const ProductListing: React.FC = () => {
         {state.hasMore && !state.loading && !state.error && (
           <div className="product-listing__load-more">
             <button
-              onClick={() => loadMoreProducts(false)}
+              onClick={loadMoreProducts}
               className="load-more-button"
             >
               Load More Products
@@ -463,11 +436,8 @@ const ProductListing: React.FC = () => {
   );
 };
 
-
 /**
- * SubComponents
  * ProductCard Component
- * Renders a single product card with image, badges, price, and controls
  */
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
@@ -478,11 +448,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   return (
     <article className="product-card">
-      {/* Product Image */}
       <div className="product-card__image">
         <Image src={product.image} alt={product.sales_category_title} width={400} height={300} loading="lazy" />
 
-        {/* Badges */}
         {product.badges.length > 0 && (
           <div className="product-card__badges">
             {product.badges.map((badge, index) => (
@@ -498,7 +466,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
       </div>
 
-      {/* Card Body */}
       <div className="product-card__body">
         <p className="product-card__category">{product.category}</p>
         <h3 className="product-card__title">{product.sales_category_title}</h3>
@@ -516,7 +483,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      {/* Card Footer */}
       <div className="product-card__footer">
         <input
           type="number"
@@ -540,7 +506,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
 /**
  * PromoBlock Component
- * Renders promotional banner that spans 2 grid columns
  */
 const PromoBlockComponent: React.FC<PromoBlockProps> = ({ promo }) => {
   return (
@@ -566,7 +531,6 @@ const PromoBlockComponent: React.FC<PromoBlockProps> = ({ promo }) => {
 
 /**
  * ShimmerCards Component
- * Renders loading skeleton cards with shimmer animation
  */
 const ShimmerCards: React.FC<ShimmerCardProps> = ({ count = 8 }) => {
   return (
@@ -590,6 +554,5 @@ const ShimmerCards: React.FC<ShimmerCardProps> = ({ count = 8 }) => {
   );
 };
 
-// Export the component
 export { ProductListing };
 export default ProductListing;
