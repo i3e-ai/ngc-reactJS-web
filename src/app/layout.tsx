@@ -10,7 +10,7 @@ import Footer from "./blocks/footer/footer";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import Loading from "./components/Loading/Loading";
 import StructuredData from "./components/StructuredData/StructuredData";
-import { organizationSchema, websiteSchema } from "./utils/structuredData";
+import { organizationSchema, websiteSchema } from "./utils/structured-data";
 
 // Optimize Google Fonts
 const sora = Sora({

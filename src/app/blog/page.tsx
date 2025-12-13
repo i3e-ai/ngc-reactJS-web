@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import BlogHero from './blog-hero/blog-hero'
 import BlogContent from './blog-content/blog-content';
 import StructuredData from '../components/StructuredData/StructuredData';
-import { generateBlogPostingSchema } from '../utils/structuredData';
+import { generateBlogPostingSchema } from '../utils/structured-data';
 
 export const metadata: Metadata = {
   title: "The Future of AI in 2025",
