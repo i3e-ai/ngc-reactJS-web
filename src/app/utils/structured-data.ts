@@ -3,7 +3,7 @@
  * WORKING: Provides functions to create structured data for various content types
  */
 
-import type { Product } from '../blocks/product-listing/product-listing';
+import type { Product } from '../blocks/product-listing/types';
 
 // Organization Schema
 export const organizationSchema = {

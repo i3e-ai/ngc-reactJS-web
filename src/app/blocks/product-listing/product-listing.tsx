@@ -9,7 +9,7 @@ import type {
   ProductCardProps,
   PromoBlockProps,
   ShimmerCardProps
-} from './product-listing';
+} from './types';
 import './product-listing.css';
 
 const ProductListing: React.FC = () => {

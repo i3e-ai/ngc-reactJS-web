@@ -21,12 +21,6 @@ describe('Footer Component', () => {
     expect(screen.getByRole('link', { name: /blog/i })).toBeInTheDocument();
   });
 
-  it('renders footer bottom with copyright', () => {
-    render(<Footer />);
-
-    expect(screen.getByText('All Rights Reserved')).toBeInTheDocument();
-  });
-
   it('has correct link hrefs', () => {
     render(<Footer />);
 

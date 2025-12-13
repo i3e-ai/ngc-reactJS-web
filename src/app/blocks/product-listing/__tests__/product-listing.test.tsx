@@ -4,12 +4,13 @@ import userEvent from '@testing-library/user-event';
 // @ts-expect-error - TS doesn't allow .tsx extension in imports but it's needed for Jest
 import ProductListing from '../product-listing.tsx';
 import { productService } from '../service/productService';
-import type { Product } from '../product-listing';
+import type { Product } from '../types';
 
 // Mock the product service to control API responses in tests
 jest.mock('../service/productService', () => ({
   productService: {
     fetchProducts: jest.fn(),
+    clearCache: jest.fn(),
   },
 }));
 
