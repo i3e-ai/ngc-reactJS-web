@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ApiResponse,
   ProductFilters,
@@ -8,38 +9,45 @@ import {
 
 // API Configuration
 const API_CONFIG = {
-  BASE_URL: 'https://dummyjson.com',
+  BASE_URL: '/api/komatsu-proxy', // Use Next.js API route proxy
+  DEFAULT_UID: 'MTQ2OA==',
   ITEMS_PER_PAGE: 8,
   RETRY_ATTEMPTS: 3,
   TIMEOUT: 10000,
 };
 
-// Transform DummyJSON product to our Product type
-interface DummyJSONProduct {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  brand: string;
-  category: string;
-  thumbnail: string;
-  images: string[];
+// Komatsu API Response Types
+interface KomatsuProduct {
+  shortDescription: string;
+  sku: string;
+  aemUrl: string;
+  imageUrl: string;
 }
 
-interface DummyJSONResponse {
-  products: DummyJSONProduct[];
-  total: number;
-  skip: number;
-  limit: number;
+interface KomatsuCategory {
+  uid: string;
+  name: string;
+}
+
+interface KomatsuPageInfo {
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+interface KomatsuApiResponse {
+  products?: KomatsuProduct[];
+  categories?: KomatsuCategory[];
+  childCategories?: any[];
+  pageInfo?: KomatsuPageInfo;
+  totalCount?: number;
+  parentCategoryName?: string;
 }
 
 class ProductService {
   private static instance: ProductService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private cache: Map<string, any> = new Map();
+  private categoryCache: KomatsuCategory[] | null = null;
 
   static getInstance(): ProductService {
     if (!ProductService.instance) {
@@ -49,63 +57,41 @@ class ProductService {
   }
 
   /**
-   * Transform DummyJSON product to our internal Product format
+   * Transform Komatsu API product to our internal Product format
    */
-  private transformProduct(apiProduct: DummyJSONProduct): Product {
+  private transformProduct(apiProduct: KomatsuProduct): Product {
     const badges: Badge[] = [];
 
-    if (apiProduct.discountPercentage > 0) {
-      badges.push({
-        type: 'on-sale',
-        label: `${Math.round(apiProduct.discountPercentage)}% OFF`,
-        color: '#FF5722',
-      });
+    // Check if it's a placeholder image
+    const isPlaceholder = apiProduct.imageUrl.includes('/placeholder/');
+
+    // Construct full image URL if it's a relative path
+    let fullImageUrl = apiProduct.imageUrl;
+    if (!fullImageUrl.startsWith('http')) {
+      fullImageUrl = `https://www.komatsu.com${apiProduct.imageUrl}`;
     }
 
-    if (apiProduct.id > 90) {
-      badges.push({
-        type: 'new',
-        label: 'New',
-        color: '#4CAF50',
-      });
-    }
-
-    if (apiProduct.stock < 50) {
-      badges.push({
-        type: 'limited',
-        label: 'Low Stock',
-        color: '#FFC107',
-      });
-    }
-
-    const originalPrice =
-      apiProduct.discountPercentage > 0
-        ? apiProduct.price / (1 - apiProduct.discountPercentage / 100)
-        : undefined;
+    // Extract category from aemUrl (e.g., "parts/cab/guarding/...")
+    const urlParts = apiProduct.aemUrl.split('/');
+    const category = urlParts.length > 2 ? urlParts[2] : 'parts';
 
     return {
-      id: `prod-${apiProduct.id}`,
-      image: apiProduct.thumbnail,
+      id: apiProduct.sku,
+      image: fullImageUrl,
       badges,
-      category: apiProduct.category,
-      sales_category_title: apiProduct.title,
-      sku: `SKU-${apiProduct.brand?.toUpperCase() || 'PROD'}-${apiProduct.id}`,
-      price: apiProduct.price,
-      originalPrice,
+      category: category,
+      sales_category_title: apiProduct.shortDescription,
+      sku: apiProduct.sku,
+      price: 0,
       quantity: 1,
-      inStock: apiProduct.stock > 0,
-      description: apiProduct.description,
-      rating: apiProduct.rating,
+      inStock: !isPlaceholder,
+      description: apiProduct.shortDescription,
+      rating: 0,
     };
   }
 
   /**
-   * Fetch products from DummyJSON API with pagination
-   *
-   * FIXED: Now handles client-side filtering correctly by:
-   * 1. Fetching more products than needed
-   * 2. Applying filters
-   * 3. Returning correct pagination based on filtered results
+   * Fetch products from Komatsu API with pagination and filters
    */
   async fetchProducts(
     page: number = 1,
@@ -122,63 +108,70 @@ class ProductService {
         return this.cache.get(cacheKey);
       }
 
-      // For client-side filters (price, stock), we need to fetch MORE products
-      // to ensure we have enough after filtering
-      const hasClientSideFilters =
-        filters?.minPrice !== undefined ||
-        filters?.maxPrice !== undefined ||
-        filters?.inStockOnly;
+      // Build API URL with query parameters
+      const params = new URLSearchParams();
 
-      // Fetch 3x more products if we have client-side filters
-      const fetchLimit = hasClientSideFilters ? limit * 3 : limit;
-      const skip = (page - 1) * fetchLimit;
-
-      // Build API URL
-      let url = `${API_CONFIG.BASE_URL}/products?limit=${fetchLimit}&skip=${skip}`;
-
+      // Add category filter (uid) if provided
       if (filters?.category && filters.category !== 'all') {
-        url = `${API_CONFIG.BASE_URL}/products/category/${filters.category}?limit=${fetchLimit}&skip=${skip}`;
+        const categoryUid = await this.getCategoryUid(filters.category);
+        params.append('uid', categoryUid || API_CONFIG.DEFAULT_UID);
+      } else {
+        params.append('uid', API_CONFIG.DEFAULT_UID);
       }
 
+      params.append('c', page.toString());
+      params.append('z', limit.toString());
+      params.append('s', 'a'); // sort order
+
+      // Add search query if provided
       if (filters?.searchQuery) {
-        url = `${API_CONFIG.BASE_URL}/products/search?q=${encodeURIComponent(
-          filters.searchQuery
-        )}&limit=${fetchLimit}&skip=${skip}`;
+        params.append('q', filters.searchQuery);
       }
 
+      const url = `${API_CONFIG.BASE_URL}?${params.toString()}`;
       console.log('Fetching from API:', url);
 
       const response = await this.fetchWithRetry(url);
-      const data: DummyJSONResponse = await response.json();
+      const data: KomatsuApiResponse = await response.json();
+
+      console.log('API Response:', data);
+
+      // Handle both array and object response formats
+      let productsArray: KomatsuProduct[] = [];
+      if (Array.isArray(data)) {
+        productsArray = data;
+      } else if (data.products && Array.isArray(data.products)) {
+        productsArray = data.products;
+      }
+
+      console.log(`Found ${productsArray.length} products in response`);
 
       // Transform products
-      const products = data.products.map((p) => this.transformProduct(p));
+      const products = productsArray.map((p) => this.transformProduct(p));
 
-      // Apply client-side filters
+      // Apply client-side filters if needed
       const filteredProducts = this.applyClientSideFilters(products, filters);
-
-      // Take only the requested limit from filtered results
-      const paginatedProducts = filteredProducts.slice(0, limit);
 
       // Mock promo blocks
       const promos: PromoBlock[] = this.getMockPromos();
 
-      // Calculate correct pagination using API's total count
-      const totalFromApi = data.total;
+      // Build response with pagination info
       const result: ApiResponse<{ products: Product[]; promos: PromoBlock[] }> =
         {
           data: {
-            products: paginatedProducts,
+            products: filteredProducts,
             promos,
           },
           success: true,
           pagination: {
-            currentPage: page,
-            totalPages: Math.ceil(totalFromApi / limit),
-            totalItems: totalFromApi,
-            itemsPerPage: limit,
-            hasNext: skip + limit < totalFromApi,
-            hasPrev: page > 1,
+            currentPage: data.pageInfo?.currentPage || page,
+            totalPages: data.pageInfo?.totalPages || 1,
+            totalItems: data.totalCount || filteredProducts.length,
+            itemsPerPage: data.pageInfo?.pageSize || limit,
+            hasNext: data.pageInfo
+              ? data.pageInfo.currentPage < data.pageInfo.totalPages
+              : false,
+            hasPrev: data.pageInfo ? data.pageInfo.currentPage > 1 : page > 1,
           },
         };
 
@@ -207,7 +200,7 @@ class ProductService {
   }
 
   /**
-   * Apply filters that API doesn't support (price range, stock)
+   * Apply client-side filters if needed
    */
   private applyClientSideFilters(
     products: Product[],
@@ -216,14 +209,6 @@ class ProductService {
     if (!filters) return products;
 
     return products.filter((product) => {
-      // Price range filter
-      if (filters.minPrice !== undefined && product.price < filters.minPrice) {
-        return false;
-      }
-      if (filters.maxPrice !== undefined && product.price > filters.maxPrice) {
-        return false;
-      }
-
       // Stock filter
       if (filters.inStockOnly && !product.inStock) {
         return false;
@@ -234,16 +219,31 @@ class ProductService {
   }
 
   /**
+   * Get category UID by name
+   */
+  private async getCategoryUid(categoryName: string): Promise<string | null> {
+    try {
+      const categories = await this.fetchCategories();
+      const category = categories.find(
+        (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
+      );
+      return category?.uid || null;
+    } catch (error) {
+      console.error('Failed to get category UID:', error);
+      return null;
+    }
+  }
+
+  /**
    * Get mock promotional blocks
    */
   private getMockPromos(): PromoBlock[] {
     return [
       {
         id: 'promo-1',
-        title: 'Black Friday Sale',
-        description: 'Up to 50% off on selected items',
-        image:
-          'https://placehold.co/600x300/FF5722/ffffff?text=Black+Friday+Sale',
+        title: 'Komatsu Parts Special',
+        description: 'Genuine OEM parts for your equipment',
+        image: 'https://placehold.co/600x300/F7931E/ffffff?text=Komatsu+Parts',
         ctaText: 'Shop Now',
         ctaLink: '/sale',
       },
@@ -288,15 +288,29 @@ class ProductService {
   }
 
   /**
-   * Fetch available categories from API
+   * Fetch available categories from Komatsu API
    */
-  async fetchCategories(): Promise<string[]> {
+  async fetchCategories(): Promise<KomatsuCategory[]> {
     try {
-      const response = await fetch(
-        `${API_CONFIG.BASE_URL}/products/categories`
-      );
-      const categories: string[] = await response.json();
-      return categories;
+      if (this.categoryCache) {
+        return this.categoryCache;
+      }
+
+      // Fetch from main endpoint to get categories
+      const params = new URLSearchParams();
+      params.append('uid', API_CONFIG.DEFAULT_UID);
+      params.append('c', '1');
+      params.append('z', '1');
+      params.append('s', 'a');
+
+      const url = `${API_CONFIG.BASE_URL}?${params.toString()}`;
+      const response = await this.fetchWithRetry(url);
+      const data: KomatsuApiResponse = await response.json();
+
+      console.log('Categories response:', data);
+
+      this.categoryCache = data.categories || [];
+      return this.categoryCache;
     } catch (error) {
       console.error('Failed to fetch categories:', error);
       return [];
@@ -305,7 +319,9 @@ class ProductService {
 
   clearCache(): void {
     this.cache.clear();
+    this.categoryCache = null;
   }
 }
 
 export const productService = ProductService.getInstance();
+export type { KomatsuCategory, KomatsuProduct, KomatsuApiResponse };

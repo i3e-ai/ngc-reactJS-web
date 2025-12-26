@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { productService } from './service/productService';
+import type { KomatsuCategory } from './service/productService';
 import type {
   Product,
   PromoBlock,
@@ -24,24 +25,22 @@ const ProductListing: React.FC = () => {
     filter: {}
   });
 
+  const [categories, setCategories] = useState<KomatsuCategory[]>([]);
   const [addedToCart, setAddedToCart] = useState<string | null>(null);
-  const priceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const loadingRef = useRef<boolean>(false);
 
-  // Cleanup on unmount
+  // Fetch categories on mount
   useEffect(() => {
-    return () => {
-      if (priceTimeoutRef.current) {
-        clearTimeout(priceTimeoutRef.current);
-      }
-      // Don't abort - causes issues with StrictMode
+    const fetchCategories = async () => {
+      const cats = await productService.fetchCategories();
+      setCategories(cats);
     };
+    fetchCategories();
   }, []);
 
   /**
-   * FIXED: Single source of truth for loading products
-   * Prevents race conditions by canceling previous requests
+   * Load products with filters
    */
   const loadProducts = useCallback(async (
     page: number,
@@ -74,7 +73,6 @@ const ProductListing: React.FC = () => {
           : [...state.products, ...response.data.products];
 
         // Inject promo after every 8 products
-        // Count existing promos to avoid duplicates
         const existingPromoCount = newProducts.filter(
           (item) => 'type' in item && item.type === 'promo'
         ).length;
@@ -91,7 +89,7 @@ const ProductListing: React.FC = () => {
             type: 'promo'
           } as Product & PromoBlock & { type: 'promo' });
 
-          console.log(`Injected promo block with ID: ${uniquePromoId} after ${productOnlyCount} products`);
+          console.log(`Injected promo block with ID: ${uniquePromoId}`);
         }
 
         setState(prev => ({
@@ -127,6 +125,7 @@ const ProductListing: React.FC = () => {
     } finally {
       loadingRef.current = false;
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.products]);
 
   /**
@@ -138,7 +137,7 @@ const ProductListing: React.FC = () => {
   }, [state.loading, state.hasMore, state.currentPage, state.filter, loadProducts]);
 
   /**
-   * FIXED: Handle quantity change
+   * Handle quantity change
    */
   const handleQuantityChange = useCallback((productId: string, quantity: number) => {
     setState(prev => ({
@@ -151,26 +150,25 @@ const ProductListing: React.FC = () => {
   }, []);
 
   /**
-   * FIXED: Handle add to cart
+   * Handle add to cart
    */
   const handleAddToCart = useCallback((product: Product) => {
     const quantity = state.selectedQuantities[product.id] || 1;
 
     console.log(`🛒 Adding to cart:`, {
       product: product.sales_category_title,
-      quantity,
-      price: product.price,
-      total: product.price * quantity
+      sku: product.sku,
+      quantity
     });
 
     setAddedToCart(product.id);
     setTimeout(() => setAddedToCart(null), 2000);
 
-    alert(`✅ Added ${quantity}x ${product.sales_category_title} to cart!\n\nPrice: $${product.price.toFixed(2)}\nTotal: $${(product.price * quantity).toFixed(2)}`);
+    alert(`✅ Added ${quantity}x ${product.sales_category_title} (${product.sku}) to cart!`);
   }, [state.selectedQuantities]);
 
   /**
-   * FIXED: Retry after error
+   * Retry after error
    */
   const handleRetry = useCallback(() => {
     console.log('🔄 Retrying...');
@@ -184,14 +182,14 @@ const ProductListing: React.FC = () => {
     console.log('🚀 Component mounted, loading initial products');
     loadProducts(1, true, {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run on mount
+  }, []);
 
   /**
-   * FIXED: Handle category change
+   * Handle category change
    */
-  const handleCategoryChange = useCallback((category: string) => {
-    console.log(`Filter Changed: ${category}`);
-    const newFilter = { ...state.filter, category };
+  const handleCategoryChange = useCallback((categoryName: string) => {
+    console.log(`Category Changed: ${categoryName}`);
+    const newFilter = { ...state.filter, category: categoryName };
 
     // Clear cache for new filter
     productService.clearCache();
@@ -201,35 +199,7 @@ const ProductListing: React.FC = () => {
   }, [state.filter, loadProducts]);
 
   /**
-   * FIXED: Handle price range change with proper debouncing
-   */
-  const handlePriceRangeChange = useCallback((minPrice: number, maxPrice: number) => {
-    // Clear existing timeout
-    if (priceTimeoutRef.current) {
-      clearTimeout(priceTimeoutRef.current);
-    }
-
-    // Update filter state immediately for UI responsiveness
-    setState(prev => ({
-      ...prev,
-      filter: { ...prev.filter, minPrice, maxPrice }
-    }));
-
-    // Debounce the actual API call
-    priceTimeoutRef.current = setTimeout(() => {
-      console.log(`Price filter changed: $${minPrice} - $${maxPrice}`);
-      const newFilter = { ...state.filter, minPrice, maxPrice };
-
-      // Clear cache for new filter
-      productService.clearCache();
-
-      // Load with new filter
-      loadProducts(1, true, newFilter);
-    }, 500); // Increased to 500ms for better UX
-  }, [state.filter, loadProducts]);
-
-  /**
-   * FIXED: Handle stock filter
+   * Handle stock filter
    */
   const handleStockFilter = useCallback((inStockOnly: boolean) => {
     console.log(`Stock filter changed: ${inStockOnly}`);
@@ -265,89 +235,19 @@ const ProductListing: React.FC = () => {
             />
             <label htmlFor="all">All Products</label>
           </div>
-          <div className="filter-option">
-            <input
-              type="radio"
-              id="beauty"
-              name="category"
-              checked={state.filter.category === 'beauty'}
-              onChange={() => handleCategoryChange('beauty')}
-            />
-            <label htmlFor="beauty">Beauty</label>
-          </div>
-          <div className="filter-option">
-            <input
-              type="radio"
-              id="fragrances"
-              name="category"
-              checked={state.filter.category === 'fragrances'}
-              onChange={() => handleCategoryChange('fragrances')}
-            />
-            <label htmlFor="fragrances">Fragrances</label>
-          </div>
-          <div className="filter-option">
-            <input
-              type="radio"
-              id="furniture"
-              name="category"
-              checked={state.filter.category === 'furniture'}
-              onChange={() => handleCategoryChange('furniture')}
-            />
-            <label htmlFor="furniture">Furniture</label>
-          </div>
-        </div>
 
-        <div className='dualrange-filter'>
-          <h3 className="filter-heading">Price Range: ${state.filter.minPrice || 0} - ${state.filter.maxPrice || 1000}</h3>
-
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label style={{ fontSize: '0.85rem', color: 'var(--plp-text-muted)' }}>
-              Min: ${state.filter.minPrice || 0}
-            </label>
-
-            <div className="slider-container">
-              <div className="slider-track-bg" />
-              <div
-                className="slider-track-fill"
-                style={{
-                  left: `${((state.filter.minPrice || 0) / 1000) * 100}%`,
-                  width: `${(((state.filter.maxPrice || 1000) - (state.filter.minPrice || 0)) / 1000) * 100}%`
-                }}
-              />
-
+          {categories.map((cat) => (
+            <div key={cat.uid} className="filter-option">
               <input
-                type='range'
-                min="0"
-                max="1000"
-                value={state.filter.minPrice || 0}
-                onChange={(e) => {
-                  const newMin = parseInt(e.target.value);
-                  const currentMax = state.filter.maxPrice || 1000;
-                  if (newMin >= currentMax) return;
-                  handlePriceRangeChange(newMin, currentMax);
-                }}
-                className='thumb thumb--left'
+                type="radio"
+                id={cat.uid}
+                name="category"
+                checked={state.filter.category === cat.name}
+                onChange={() => handleCategoryChange(cat.name)}
               />
-              <input
-                type='range'
-                min='0'
-                max='1000'
-                value={state.filter.maxPrice || 1000}
-                onChange={(e) => {
-                  const newMax = parseInt(e.target.value);
-                  const currentMin = state.filter.minPrice || 0;
-                  if (newMax <= currentMin) return;
-                  handlePriceRangeChange(currentMin, newMax);
-                }}
-                className='thumb thumb--right'
-              />
+              <label htmlFor={cat.uid}>{cat.name}</label>
             </div>
-
-            <div className='price-range-label'>
-              <span>$0</span>
-              <span>$1000</span>
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className="filter-group">
@@ -443,7 +343,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <article className="product-card">
       <div className="product-card__image">
-        <Image src={product.image} alt={product.sales_category_title} width={400} height={300} loading="lazy" />
+        <Image
+          src={product.image}
+          alt={product.sales_category_title}
+          width={400}
+          height={300}
+          loading="lazy"
+          unoptimized
+        />
 
         {product.badges.length > 0 && (
           <div className="product-card__badges">
@@ -464,17 +371,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <p className="product-card__category">{product.category}</p>
         <h3 className="product-card__title">{product.sales_category_title}</h3>
         <p className="product-card__sku">SKU: {product.sku}</p>
-
-        <div className="product-card__price-wrapper">
-          <span className={`product-card__price ${product.originalPrice ? 'product-card__price--has-discount' : ''}`}>
-            ${product.price.toFixed(2)}
-          </span>
-          {product.originalPrice && (
-            <span className="product-card__original-price">
-              ${product.originalPrice.toFixed(2)}
-            </span>
-          )}
-        </div>
       </div>
 
       <div className="product-card__footer">
@@ -536,7 +432,6 @@ const ShimmerCards: React.FC<ShimmerCardProps> = ({ count = 8 }) => {
             <div className="shimmer-text-sm shimmer-box"></div>
             <div className="shimmer-text-md shimmer-box"></div>
             <div className="shimmer-text-sm shimmer-box"></div>
-            <div className="shimmer-text-lg shimmer-box"></div>
           </div>
           <div className="shimmer-card__footer">
             <div className="shimmer-input shimmer-box"></div>
