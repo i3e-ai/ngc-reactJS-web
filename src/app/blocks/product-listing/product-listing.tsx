@@ -125,7 +125,6 @@ const ProductListing: React.FC = () => {
     } finally {
       loadingRef.current = false;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.products]);
 
   /**
@@ -164,14 +163,14 @@ const ProductListing: React.FC = () => {
     setAddedToCart(product.id);
     setTimeout(() => setAddedToCart(null), 2000);
 
-    alert(`✅ Added ${quantity}x ${product.sales_category_title} (${product.sku}) to cart!`);
+    alert(`Added ${quantity}x ${product.sales_category_title} (${product.sku}) to cart!`);
   }, [state.selectedQuantities]);
 
   /**
    * Retry after error
    */
   const handleRetry = useCallback(() => {
-    console.log('🔄 Retrying...');
+    console.log('Retrying...');
     loadProducts(1, true, state.filter);
   }, [state.filter, loadProducts]);
 
@@ -179,7 +178,7 @@ const ProductListing: React.FC = () => {
    * Load initial products on mount
    */
   useEffect(() => {
-    console.log('🚀 Component mounted, loading initial products');
+    console.log('Component mounted, loading initial products');
     loadProducts(1, true, {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -191,10 +190,8 @@ const ProductListing: React.FC = () => {
     console.log(`Category Changed: ${categoryName}`);
     const newFilter = { ...state.filter, category: categoryName };
 
-    // Clear cache for new filter
+    // Clear cache and load with new filter
     productService.clearCache();
-
-    // Load with new filter
     loadProducts(1, true, newFilter);
   }, [state.filter, loadProducts]);
 
@@ -205,10 +202,8 @@ const ProductListing: React.FC = () => {
     console.log(`Stock filter changed: ${inStockOnly}`);
     const newFilter = { ...state.filter, inStockOnly };
 
-    // Clear cache for new filter
+    // Clear cache and load with new filter
     productService.clearCache();
-
-    // Load with new filter
     loadProducts(1, true, newFilter);
   }, [state.filter, loadProducts]);
 

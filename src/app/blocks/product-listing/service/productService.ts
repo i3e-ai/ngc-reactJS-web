@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ApiResponse,
   ProductFilters,
@@ -38,6 +37,7 @@ interface KomatsuPageInfo {
 interface KomatsuApiResponse {
   products?: KomatsuProduct[];
   categories?: KomatsuCategory[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   childCategories?: any[];
   pageInfo?: KomatsuPageInfo;
   totalCount?: number;
@@ -46,6 +46,7 @@ interface KomatsuApiResponse {
 
 class ProductService {
   private static instance: ProductService;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private cache: Map<string, any> = new Map();
   private categoryCache: KomatsuCategory[] | null = null;
 
@@ -64,6 +65,15 @@ class ProductService {
 
     // Check if it's a placeholder image
     const isPlaceholder = apiProduct.imageUrl.includes('/placeholder/');
+
+    // Add badge for placeholder images
+    if (isPlaceholder) {
+      badges.push({
+        type: 'limited',
+        label: 'No Image',
+        color: '#9E9E9E',
+      });
+    }
 
     // Construct full image URL if it's a relative path
     let fullImageUrl = apiProduct.imageUrl;
@@ -84,9 +94,10 @@ class ProductService {
       sku: apiProduct.sku,
       price: 0,
       quantity: 1,
-      inStock: !isPlaceholder,
+      inStock: true,
       description: apiProduct.shortDescription,
       rating: 0,
+      hasRealImage: isPlaceholder, // Add flag for filtering
     };
   }
 
@@ -200,7 +211,7 @@ class ProductService {
   }
 
   /**
-   * Apply client-side filters if needed
+   * Apply client-side filters (category, stock)
    */
   private applyClientSideFilters(
     products: Product[],

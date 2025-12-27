@@ -18,6 +18,7 @@ export interface Product {
   description: string;
   rating?: number;
   featured?: boolean;
+  hasRealImage?: boolean;
 }
 
 export interface PromoBlock {
