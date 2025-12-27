@@ -1,0 +1,38 @@
+@import (reference) '../../styles/styles.less';
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: @space-4;
+  padding: @space-8;
+  
+  &--fullscreen {
+    position: fixed;
+    inset: 0;
+    background: @background-white;
+    z-index: 9999;
+  }
+  
+  &__spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid @background-cards;
+    border-top: 3px solid @text-navlink;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  &__message {
+    margin: 0;
+    color: @text-secondary;
+    font-size: @text-base;
+    font-family: @font-primary;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

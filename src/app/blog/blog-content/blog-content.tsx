@@ -7,8 +7,8 @@ interface BlogContentProps {
 
 const BlogContent: React.FC<BlogContentProps> = ({ bodyHTML }) => {
   return (
-    <section className="blog-content block">
-      <div dangerouslySetInnerHTML={{ __html: bodyHTML }} />
+    <section className="blog-content">
+      <article className="blog-content__body" dangerouslySetInnerHTML={{ __html: bodyHTML }} />
     </section>
   );
 };

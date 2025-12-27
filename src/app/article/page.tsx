@@ -3,6 +3,9 @@ import './article.css'
 import React from 'react';
 import Image from 'next/image';
 
+// Note: For client components, metadata should be set in parent layout or via next/head
+// Consider creating a server component wrapper if static metadata is needed
+
 // --- TYPE DEFINITIONS ---
 interface ArticleBody {
   mainTitle: string;
@@ -58,25 +61,26 @@ const ArticlePage: React.FC = () => {
   return (
     <section>
       <h1 id="articles">Articles</h1>
-      <div className="article block">
+      <div className="article">
         {ArticleData.map((article, index) => (
-          <article key={index} className="article-item">
-            <div className="article-image">
+          <article key={index} className="article__item">
+            <div className="article__image">
               <Image
                 src={article.image.src}
                 alt={article.image.alt}
-                width={700} // Provide base width for aspect ratio
-                height={300} // Provide base height for aspect ratio
+                width={700}
+                height={300}
+                loading="lazy"
               />
             </div>
-            <div className="article-text">
-              <h1>{article.body.mainTitle}</h1>
+            <div className="article__content">
+              <h2>{article.body.mainTitle}</h2>
 
               {article.body.paragraphs.map((paragraph, pIndex) => (
                 <p key={pIndex}>{paragraph}</p>
               ))}
 
-              <h2>{article.body.impactTitle}</h2>
+              <h3>{article.body.impactTitle}</h3>
               <ul>
                 {article.body.impactAreas.map((area, aIndex) => (
                   <li key={aIndex}>

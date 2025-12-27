@@ -2,15 +2,16 @@ import React from 'react';
 import './highlight.css';
 
 interface Slide {
+  id: string;
   title: string;
   text: string;
 }
 
 const slides: Slide[] = [
-  { title: 'Breaking News:', text: 'Component successfully converted to Next.js and TSX.' },
-  { title: 'Special Offer:', text: 'Enjoy improved security and type safety!' },
-  { title: 'System Update:', text: 'Now using CSS Modules for scoped styling.' },
-  { title: 'Pro Tip:', text: 'Data is now self-contained within the component.' },
+  { id: 'breaking-news', title: 'Breaking News:', text: 'Component successfully converted to Next.js and TSX.' },
+  { id: 'special-offer', title: 'Special Offer:', text: 'Enjoy improved security and type safety!' },
+  { id: 'system-update', title: 'System Update:', text: 'Now using CSS Modules for scoped styling.' },
+  { id: 'pro-tip', title: 'Pro Tip:', text: 'Data is now self-contained within the component.' },
 ];
 
 const Highlight: React.FC = () => {
@@ -22,12 +23,14 @@ const Highlight: React.FC = () => {
   const duplicatedSlides = [...slides, ...slides];
 
   return (
-    <div className="highlight-slides-container">
-      <div className="scrolling-wrapper">
+    <div className="highlight">
+      <div className="highlight__wrapper">
         {duplicatedSlides.map((slide, index) => (
           <div
-            key={index} // Using index is acceptable here as the list is static
-            className="highlight-slide"
+            key={`${slide.id}-${index}`}
+            className="highlight__slide"
+            role="status"
+            aria-live="polite"
           >
             <div>
               <h2>{slide.title}</h2>

@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import './content-curator.css';
+import { contentCuratorData } from '@/app/data/contentCuratorData';
 
 interface GalleryItem {
   eyebrow: string;
@@ -16,53 +17,37 @@ interface GalleryItem {
   };
 }
 
-const curatorData: GalleryItem[] = [
-  {
-    eyebrow: 'Entertainment',
-    title: 'All your entertainment in one place.',
-    link: { href: '#', text: 'Explore' },
-    image: { src: '/assets/content-curator/entertainment.jpg', alt: 'A montage of movie and TV show posters' },
-  },
-  {
-    eyebrow: 'Photography',
-    title: 'Your photos, stunningly organized.',
-    link: { href: '#', text: 'See what\'s new in Photos' },
-    image: { src: '/assets/content-curator/photography.jpg', alt: 'A vibrant landscape photograph' },
-  },
-  {
-    eyebrow: 'Productivity',
-    title: 'Turn your to-dos into dones.',
-    link: { href: '#', text: 'Discover Reminders' },
-    image: { src: '/assets/content-curator/productivity.jpg', alt: 'A checklist being marked as complete' },
-  },
-];
+interface ContentCuratorProps {
+  curatorData?: GalleryItem[];
+}
 
-const ContentCurator: React.FC = () => {
-  // Triple the data for seamless infinite loop
-  const duplicatedData = [...curatorData, ...curatorData, ...curatorData];
+const ContentCurator: React.FC<ContentCuratorProps> = ({ curatorData = contentCuratorData }) => {
+  // Duplicate data 3 times for seamless infinite scroll loop
+  const scrollData = [...curatorData, ...curatorData, ...curatorData];
 
   return (
-    <div className="content-curator-block">
-      <div className="curator-container">
-        <div className="curator-header">
-          <h2 className="curator-title">Discover what you can do</h2>
+    <div className="curator">
+      <div className="curator__container">
+        <div className="curator__header">
+          <h2 className="curator__title">Discover what you can do</h2>
         </div>
-        <div className="curator-gallery-wrapper">
-          <div className="curator-gallery">
-            {duplicatedData.map((item, index) => (
-              <div className="gallery-item" key={index}>
-                <div className="item-media">
+        <div className="curator__gallery-wrapper">
+          <div className="curator__gallery">
+            {scrollData.map((item, index) => (
+              <div className="curator__item" key={index}>
+                <div className="curator__media">
                   <Image
                     src={item.image.src}
                     alt={item.image.alt}
-                    width={800}
-                    height={450}
+                    width={400}
+                    height={300}
+                    loading="lazy"
                   />
                 </div>
-                <div className="item-content">
-                  <h4 className="item-eyebrow">{item.eyebrow}</h4>
-                  <h3 className="item-title">{item.title}</h3>
-                  <a href={item.link.href} className="item-link">
+                <div className="curator__content">
+                  <h3 className="curator__eyebrow">{item.eyebrow}</h3>
+                  <h4 className="curator__item-title">{item.title}</h4>
+                  <a href={item.link.href} className="curator__link">
                     {item.link.text}
                   </a>
                 </div>
